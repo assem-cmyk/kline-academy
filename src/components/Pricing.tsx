@@ -35,9 +35,12 @@ export default function Pricing() {
             </ul>
           </div>
 
-          <p className="text-gray-400 text-sm mb-8">
+          <p className="text-gray-400 text-sm mb-2">
             Payment via bank transfer or Instapay after acceptance.
             <br />A 50% deposit ($375) secures your seat.
+          </p>
+          <p className="text-gray-500 text-xs mb-8">
+            <strong className="text-gold">Refund Policy:</strong> Full refund available up to 10 days before the first session. After that, fees are non-refundable.
           </p>
 
           <a

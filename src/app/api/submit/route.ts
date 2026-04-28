@@ -142,6 +142,9 @@ function applicantEmailHtml(d: FormPayload): string {
           <li>A 50% deposit ($375 USD) confirms your seat</li>
           <li>Full balance ($375 USD) is due at Session 1</li>
         </ol>
+        <p style="font-size:13px;color:#666;line-height:1.6;margin:0 0 16px;padding:12px 16px;background:#fdf6e3;border-left:3px solid #D4A843;border-radius:4px">
+          <strong style="color:#1A1A2E">Refund Policy:</strong> Full refund available up to 10 days before the first session. After that, fees are non-refundable.
+        </p>
         <p style="font-size:14px;color:#333;line-height:1.7;margin:0 0 24px">
           Questions? Reply to this email or message us on WhatsApp.
         </p>
