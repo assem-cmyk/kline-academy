@@ -68,7 +68,7 @@ const socialFooterHtml = `
       <a href="https://www.linkedin.com/company/k-line-europe-gmbh/" target="_blank" rel="noopener noreferrer" style="display:inline-block;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);text-decoration:none;line-height:36px;text-align:center;margin:0 4px" title="LinkedIn">
         <img src="https://img.icons8.com/ios-filled/24/ffffff/linkedin.png" width="18" height="18" alt="LinkedIn" style="vertical-align:middle"/>
       </a>
-      <a href="https://wa.me/REPLACE_NUMBER" target="_blank" rel="noopener noreferrer" style="display:inline-block;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);text-decoration:none;line-height:36px;text-align:center;margin:0 4px" title="WhatsApp">
+      <a href="https://wa.me/201227624659" target="_blank" rel="noopener noreferrer" style="display:inline-block;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);text-decoration:none;line-height:36px;text-align:center;margin:0 4px" title="WhatsApp">
         <img src="https://img.icons8.com/ios-filled/24/ffffff/whatsapp.png" width="18" height="18" alt="WhatsApp" style="vertical-align:middle"/>
       </a>
     </div>
