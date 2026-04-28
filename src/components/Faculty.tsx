@@ -23,7 +23,7 @@ const faculty = [
     initials: 'ST',
     title: 'Pediatric Dentist (MSc)',
     institution: '',
-    badge: 'Software Product Manager & Planning Instructor, K Line Europe GmbH',
+    badge: 'Product Lead Manager, K Line Europe GmbH',
   },
   {
     name: 'Dr. Khalid Ibrahim',
