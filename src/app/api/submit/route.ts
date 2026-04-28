@@ -184,6 +184,7 @@ export async function POST(request: Request) {
       to: 'assem@clearxaligners.com',
       subject: `New Application — ${data.fullName} · ${data.batch} · ${data.software}`,
       html: adminEmailHtml(data),
+      replyTo: data.email,
     }
 
     if (data.cv?.content) {
@@ -195,17 +196,45 @@ export async function POST(request: Request) {
       ]
     }
 
-    await resend.emails.send(adminEmailParams)
+    let adminOk = false
+    let applicantOk = false
 
-    // Send applicant confirmation email
-    await resend.emails.send({
-      from: 'K Line Academy <onboarding@resend.dev>',
-      to: data.email,
-      subject: 'Your K Line Academy Application — Received ✓',
-      html: applicantEmailHtml(data),
-    })
+    try {
+      const adminResult = await resend.emails.send(adminEmailParams)
+      console.log('[submit] Admin email result:', JSON.stringify(adminResult))
+      adminOk = !adminResult.error
+      if (adminResult.error) {
+        console.error('[submit] Admin email error:', adminResult.error)
+      }
+    } catch (e) {
+      console.error('[submit] Admin email exception:', e)
+    }
 
-    return NextResponse.json({ success: true })
+    try {
+      const applicantResult = await resend.emails.send({
+        from: 'K Line Academy <onboarding@resend.dev>',
+        to: data.email,
+        subject: 'Your K Line Academy Application — Received ✓',
+        html: applicantEmailHtml(data),
+      })
+      console.log('[submit] Applicant email result:', JSON.stringify(applicantResult))
+      applicantOk = !applicantResult.error
+      if (applicantResult.error) {
+        console.error('[submit] Applicant email error:', applicantResult.error)
+      }
+    } catch (e) {
+      console.error('[submit] Applicant email exception:', e)
+    }
+
+    // As long as admin received the application, treat as success
+    if (adminOk || applicantOk) {
+      return NextResponse.json({ success: true, adminOk, applicantOk })
+    }
+
+    return NextResponse.json(
+      { success: false, error: 'Email delivery failed. Please contact us directly.' },
+      { status: 500 }
+    )
   } catch (error) {
     console.error('Submit error:', error)
     return NextResponse.json(
