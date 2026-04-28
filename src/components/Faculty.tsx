@@ -2,6 +2,14 @@
 
 const faculty = [
   {
+    name: 'Dr. Assem K',
+    photo: '/faculty/assem-k.jpg',
+    initials: 'AK',
+    title: 'Aligner Specialist',
+    institution: '',
+    badge: 'CEO, K Line Middle East',
+  },
+  {
     name: 'Dr. Sameh Talaat',
     photo: '/faculty/sameh-talaat.jpg',
     initials: 'SmT',
@@ -37,9 +45,9 @@ const faculty = [
     name: 'Dr. Amr Radwan',
     photo: '/faculty/amr-radwan.jpg',
     initials: 'AR',
-    title: 'Aligner Specialist',
+    title: 'Aligner Specialist · Clinical & Digital Orthodontic Aligners Consultant',
     institution: '',
-    badge: 'Head of Treatment Planning Department, K Line Europe GmbH',
+    badge: 'Head of Clinical Treatment Planning Dept., K Line Europe GmbH',
   },
 ]
 
