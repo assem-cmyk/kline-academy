@@ -76,6 +76,10 @@ export default function RegistrationForm() {
   const [submitError, setSubmitError] = useState('')
   const formRef = useRef<HTMLDivElement>(null)
 
+  // CV file (not persisted to localStorage — must re-upload on refresh)
+  const [cvFile, setCvFile] = useState<File | null>(null)
+  const [cvError, setCvError] = useState('')
+
   // Load from localStorage on mount
   useEffect(() => {
     try {
@@ -133,6 +137,12 @@ export default function RegistrationForm() {
         errs.confidentiality = 'Confidentiality agreement is required to participate in K Line Academy.'
       if (!form.goal.trim()) errs.goal = 'Please describe your goal'
       else if (form.goal.trim().length < 20) errs.goal = 'At least 20 characters required'
+      // CV validation
+      if (!cvFile) {
+        setCvError('Please upload your CV')
+      } else {
+        setCvError('')
+      }
     }
 
     if (s === 4) {
@@ -140,11 +150,46 @@ export default function RegistrationForm() {
     }
 
     setErrors(errs)
-    if (Object.keys(errs).length > 0) {
+    const hasCvError = s === 3 && !cvFile
+    if (Object.keys(errs).length > 0 || hasCvError) {
       scrollToError()
       return false
     }
     return true
+  }
+
+  function handleCvUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    // Max 5 MB
+    if (file.size > 5 * 1024 * 1024) {
+      setCvError('File too large. Max size is 5 MB.')
+      setCvFile(null)
+      return
+    }
+    // Allowed types
+    const allowed = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
+    if (!allowed.includes(file.type)) {
+      setCvError('Only PDF or Word (.doc, .docx) files are accepted.')
+      setCvFile(null)
+      return
+    }
+    setCvError('')
+    setCvFile(file)
+  }
+
+  function fileToBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = () => {
+        const result = reader.result as string
+        // Strip data URL prefix
+        resolve(result.split(',')[1] || '')
+      }
+      reader.onerror = reject
+      reader.readAsDataURL(file)
+    })
   }
 
   function next() {
@@ -161,14 +206,28 @@ export default function RegistrationForm() {
 
   async function submit() {
     if (!validateStep(4)) return
+    if (!cvFile) {
+      setSubmitError('Please go back to Step 3 and upload your CV.')
+      return
+    }
     setSubmitting(true)
     setSubmitError('')
 
     try {
+      const cvBase64 = await fileToBase64(cvFile)
+      const payload = {
+        ...form,
+        cv: {
+          filename: cvFile.name,
+          contentType: cvFile.type,
+          content: cvBase64,
+        },
+      }
+
       const res = await fetch('/api/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify(payload),
       })
       const data = await res.json()
 
@@ -357,6 +416,49 @@ export default function RegistrationForm() {
             </span>
           </div>
         </div>
+
+        {/* CV Upload */}
+        <div>
+          <label className="block text-sm font-medium text-navy mb-1.5">
+            Upload your CV *
+          </label>
+          <div className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
+            cvError ? 'border-red-400 bg-red-50/30' : cvFile ? 'border-gold bg-gold/5' : 'border-gray-300 hover:border-gray-400'
+          }`}>
+            <input
+              id="cv"
+              type="file"
+              accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+              onChange={handleCvUpload}
+              className="hidden"
+            />
+            {cvFile ? (
+              <div>
+                <svg className="w-8 h-8 text-gold mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p className="text-sm font-medium text-navy">{cvFile.name}</p>
+                <p className="text-xs text-gray-500 mt-1">{(cvFile.size / 1024).toFixed(1)} KB</p>
+                <button
+                  type="button"
+                  onClick={() => { setCvFile(null); setCvError('') }}
+                  className="text-xs text-red-600 hover:underline mt-2"
+                >
+                  Remove
+                </button>
+              </div>
+            ) : (
+              <label htmlFor="cv" className="cursor-pointer block">
+                <svg className="w-8 h-8 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                </svg>
+                <p className="text-sm text-navy font-medium">Click to upload your CV</p>
+                <p className="text-xs text-gray-500 mt-1">PDF or Word · Max 5 MB</p>
+              </label>
+            )}
+          </div>
+          {cvError && <p className="text-red-600 text-sm mt-1 field-error">{cvError}</p>}
+        </div>
       </div>
     )
   }
@@ -392,6 +494,7 @@ export default function RegistrationForm() {
           ['Willing to be Graded', form.willingGraded],
           ['Confidentiality', form.confidentiality],
           ['Goal', form.goal],
+          ['CV', cvFile ? cvFile.name : 'Not uploaded'],
         ],
       },
     ]

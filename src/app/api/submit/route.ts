@@ -5,6 +5,12 @@ function getResend() {
   return new Resend(process.env.RESEND_API_KEY)
 }
 
+interface CvAttachment {
+  filename: string
+  contentType: string
+  content: string // base64
+}
+
 interface FormPayload {
   fullName: string
   email: string
@@ -20,6 +26,7 @@ interface FormPayload {
   confidentiality: string
   goal: string
   investmentConfirmed: boolean
+  cv?: CvAttachment
 }
 
 function isValidEmail(email: string) {
@@ -95,6 +102,7 @@ function adminEmailHtml(d: FormPayload): string {
     ['Willing to be Graded', d.willingGraded],
     ['Agrees to Confidentiality', d.confidentiality],
     ['Goal After Program', d.goal],
+    ['CV Attached', d.cv ? d.cv.filename : 'Not provided'],
     ['Investment Confirmed', 'Yes'],
     ['Submitted At', cairoTimestamp()],
   ]
@@ -170,13 +178,24 @@ export async function POST(request: Request) {
 
     const resend = getResend()
 
-    // Send admin notification email
-    await resend.emails.send({
+    // Send admin notification email (with CV attached if provided)
+    const adminEmailParams: Parameters<typeof resend.emails.send>[0] = {
       from: 'K Line Academy <onboarding@resend.dev>',
       to: 'assem@clearxaligners.com',
       subject: `New Application — ${data.fullName} · ${data.batch} · ${data.software}`,
       html: adminEmailHtml(data),
-    })
+    }
+
+    if (data.cv?.content) {
+      adminEmailParams.attachments = [
+        {
+          filename: data.cv.filename,
+          content: data.cv.content, // base64
+        },
+      ]
+    }
+
+    await resend.emails.send(adminEmailParams)
 
     // Send applicant confirmation email
     await resend.emails.send({
