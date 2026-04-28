@@ -39,7 +39,7 @@ export default function SoftwareSection() {
                 <img
                   src={sw.logo}
                   alt={`${sw.name} logo`}
-                  className="max-h-16 max-w-[200px] object-contain relative z-10 transition-transform group-hover:scale-105"
+                  className="max-h-14 max-w-[260px] object-contain relative z-10 transition-transform group-hover:scale-105"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement
                     target.style.display = 'none'

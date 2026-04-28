@@ -5,9 +5,9 @@ const faculty = [
     name: 'Dr. Assem Youssef',
     photo: '/faculty/assem-k.jpg',
     initials: 'AY',
-    title: 'Aligner Specialist',
+    title: '',
     institution: '',
-    badge: 'CEO, K Line Middle East',
+    badge: 'CEO, K Line ME',
   },
   {
     name: 'Dr. Sameh Talaat',
@@ -63,7 +63,7 @@ function FacultyPhoto({ photo, initials, name }: { photo: string; initials: stri
         <img
           src={photo}
           alt={name}
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover object-top"
           onError={(e) => {
             (e.target as HTMLImageElement).style.display = 'none'
           }}
@@ -101,7 +101,7 @@ export default function Faculty() {
             >
               <FacultyPhoto photo={f.photo} initials={f.initials} name={f.name} />
               <h3 className="text-lg font-bold text-navy mb-1">{f.name}</h3>
-              <p className="text-sm text-navy/60 mb-1">{f.title}</p>
+              {f.title && <p className="text-sm text-navy/60 mb-1">{f.title}</p>}
               {f.institution && (
                 <p className="text-sm text-navy/50 mb-3 italic">{f.institution}</p>
               )}
