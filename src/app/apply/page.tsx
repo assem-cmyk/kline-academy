@@ -5,7 +5,7 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Apply — K Line Academy',
-  description: 'Apply for the K Line Academy digital aligner planning bootcamp. 4 weeks, 15 real cases, direct hiring pipeline into K Line Middle East.',
+  description: 'Apply for the K Line Academy digital aligner planning bootcamp. 4 weeks, 15 real cases, direct hiring pipeline into K Line Europe GmbH.',
 }
 
 export default function ApplyPage() {

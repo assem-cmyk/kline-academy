@@ -4,9 +4,9 @@ const included = [
   'OnyxCeph or Titan software access',
   'Printed session materials',
   'Pre & post skills assessment',
-  'K Line ME hiring pipeline eligibility',
+  'K Line Europe hiring pipeline eligibility',
   '50% discount on first 2 cases',
-  '12-month alumni webinar access',
+  '6-month alumni webinar access',
 ]
 
 export default function Pricing() {
