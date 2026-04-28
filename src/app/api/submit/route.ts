@@ -180,7 +180,7 @@ export async function POST(request: Request) {
 
     // Send admin notification email (with CV attached if provided)
     const adminEmailParams: Parameters<typeof resend.emails.send>[0] = {
-      from: 'K Line Academy <onboarding@resend.dev>',
+      from: 'K Line Academy <noreply@klineacademy.org>',
       to: 'assem@clearxaligners.com',
       subject: `New Application — ${data.fullName} · ${data.batch} · ${data.software}`,
       html: adminEmailHtml(data),
@@ -230,7 +230,7 @@ export async function POST(request: Request) {
 
     try {
       const applicantResult = await resend.emails.send({
-        from: 'K Line Academy <onboarding@resend.dev>',
+        from: 'K Line Academy <noreply@klineacademy.org>',
         to: data.email,
         subject: 'Your K Line Academy Application — Received ✓',
         html: applicantEmailHtml(data),
