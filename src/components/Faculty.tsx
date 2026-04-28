@@ -2,16 +2,6 @@
 
 const faculty = [
   {
-    name: 'Dr. Assem Youssef',
-    photo: '/faculty/assem-k.jpg',
-    initials: 'AY',
-    title: '',
-    institution: '',
-    badge: 'CEO, K Line ME',
-    objectPosition: '50% 35%',
-    scale: 1.3,
-  },
-  {
     name: 'Dr. Sameh Talaat',
     photo: '/faculty/sameh-talaat.jpg',
     initials: 'SmT',
