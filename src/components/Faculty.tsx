@@ -104,13 +104,7 @@ export default function Faculty() {
               key={f.name}
               className="group relative text-center p-8 rounded-2xl bg-white border border-navy-700/8 hover:border-teal/30 shadow-premium hover:shadow-premium-lg hover:-translate-y-1 transition-all duration-300"
             >
-              <FacultyPhoto
-                photo={f.photo}
-                initials={f.initials}
-                name={f.name}
-                objectPosition={f.objectPosition}
-                scale={f.scale}
-              />
+              <FacultyPhoto photo={f.photo} initials={f.initials} name={f.name} />
               <h3 className="text-lg font-bold text-navy mb-1">{f.name}</h3>
               {f.title && <p className="text-sm text-navy/60 mb-1">{f.title}</p>}
               {f.institution && (
