@@ -36,10 +36,18 @@ export default function Pricing() {
             <p className="text-teal text-xs font-semibold tracking-[0.2em] uppercase mb-3">
               First Batch · Cairo
             </p>
-            <p className="text-6xl md:text-7xl font-bold text-white mb-2 tracking-tight">
-              $750
-              <span className="text-xl font-normal text-slate-400 ml-2">USD</span>
-            </p>
+            <div className="flex items-baseline justify-center gap-4 mb-2">
+              <span className="text-2xl md:text-3xl font-semibold text-slate-500 line-through decoration-2">
+                $1,000
+              </span>
+              <p className="text-6xl md:text-7xl font-bold text-white tracking-tight">
+                $750
+                <span className="text-xl font-normal text-slate-400 ml-2">USD</span>
+              </p>
+            </div>
+            <span className="inline-block bg-teal/15 text-teal-light text-[11px] font-semibold uppercase tracking-wider px-3 py-1.5 rounded-full border border-teal/30 mb-3">
+              First Batch Discount · Save $250
+            </span>
             <p className="text-slate-400 text-sm mb-10">
               4 weekends · 64 hours · 15 cases
             </p>

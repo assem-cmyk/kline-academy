@@ -41,6 +41,14 @@ const faculty = [
     institution: '',
     badge: 'Head of Clinical Treatment Planning Dept., K Line Europe GmbH',
   },
+  {
+    name: 'Dr. Nehal Ahmed',
+    photo: '/faculty/nehal-ahmed.jpg',
+    initials: 'NA',
+    title: 'Aligner Treatment Expert · 10+ years in digital orthodontics',
+    institution: '',
+    badge: 'Head of Motion Viewer Team, K Line Europe GmbH',
+  },
 ]
 
 function FacultyPhoto({
