@@ -8,6 +8,8 @@ const faculty = [
     title: '',
     institution: '',
     badge: 'CEO, K Line ME',
+    objectPosition: '50% 35%',
+    scale: 1.3,
   },
   {
     name: 'Dr. Sameh Talaat',
@@ -51,7 +53,19 @@ const faculty = [
   },
 ]
 
-function FacultyPhoto({ photo, initials, name }: { photo: string; initials: string; name: string }) {
+function FacultyPhoto({
+  photo,
+  initials,
+  name,
+  objectPosition = 'center top',
+  scale = 1,
+}: {
+  photo: string
+  initials: string
+  name: string
+  objectPosition?: string
+  scale?: number
+}) {
   return (
     <div className="relative w-[180px] h-[180px] mx-auto mb-5">
       {/* Glow ring */}
@@ -63,7 +77,8 @@ function FacultyPhoto({ photo, initials, name }: { photo: string; initials: stri
         <img
           src={photo}
           alt={name}
-          className="absolute inset-0 w-full h-full object-cover object-top"
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ objectPosition, transform: `scale(${scale})` }}
           onError={(e) => {
             (e.target as HTMLImageElement).style.display = 'none'
           }}
@@ -99,7 +114,13 @@ export default function Faculty() {
               key={f.name}
               className="group relative text-center p-8 rounded-2xl bg-white border border-navy-700/8 hover:border-teal/30 shadow-premium hover:shadow-premium-lg hover:-translate-y-1 transition-all duration-300"
             >
-              <FacultyPhoto photo={f.photo} initials={f.initials} name={f.name} />
+              <FacultyPhoto
+                photo={f.photo}
+                initials={f.initials}
+                name={f.name}
+                objectPosition={f.objectPosition}
+                scale={f.scale}
+              />
               <h3 className="text-lg font-bold text-navy mb-1">{f.name}</h3>
               {f.title && <p className="text-sm text-navy/60 mb-1">{f.title}</p>}
               {f.institution && (
