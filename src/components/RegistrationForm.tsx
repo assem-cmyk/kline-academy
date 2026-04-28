@@ -311,8 +311,8 @@ export default function RegistrationForm() {
           <Label htmlFor="software">Software Preference *</Label>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-2">
             {[
-              { value: 'OnyxCeph', label: 'OnyxCeph', desc: 'Cloud-based · 10 seats per batch' },
-              { value: 'Titan', label: 'Titan', desc: 'Advanced design · 10 seats per batch' },
+              { value: 'OnyxCeph', label: 'OnyxCeph', desc: 'Cloud-based · 6 seats per batch' },
+              { value: 'Titan', label: 'Titan', desc: 'Advanced design · 6 seats per batch' },
               { value: 'No preference', label: 'No preference', desc: 'Assign me based on availability' },
             ].map((opt) => (
               <button
@@ -332,7 +332,7 @@ export default function RegistrationForm() {
           </div>
           <FieldError field="software" />
           <p className="text-gray-400 text-xs mt-2">
-            Each batch has 10 seats per software. Allocation is first-come, first-served upon acceptance.
+            Each batch has 6 seats per software. Allocation is first-come, first-served upon acceptance.
           </p>
         </div>
       </div>

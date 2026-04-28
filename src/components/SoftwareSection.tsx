@@ -1,11 +1,11 @@
 const software = [
   {
     name: 'OnyxCeph',
-    features: ['Cloud-based aligner planning', '10 seats per batch', 'Beginner-friendly workflow'],
+    features: ['Cloud-based aligner planning', '6 seats per batch', 'Beginner-friendly workflow'],
   },
   {
     name: 'Titan',
-    features: ['Advanced aligner design software', '10 seats per batch', 'Industry-standard toolchain'],
+    features: ['Advanced aligner design software', '6 seats per batch', 'Industry-standard toolchain'],
   },
 ]
 
