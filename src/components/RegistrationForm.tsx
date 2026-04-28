@@ -43,7 +43,7 @@ const STORAGE_KEY = 'kline-academy-form'
 const STEPS = ['Personal Info', 'Batch & Software', 'Clinical Background', 'Review & Submit']
 
 const BATCHES = [
-  'Offline — Batch 1 (Cairo) · June 20 – July 12, 2026 · Sat & Sun · 4 weekends',
+  'Offline — Batch 1 (Cairo) · July 4 – 26, 2026 · Sat & Sun · 4 weekends',
 ]
 
 const CHALLENGES = [

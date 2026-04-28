@@ -27,7 +27,7 @@ export default function Hero() {
 
         <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-6 py-3 rounded-full">
           <span className="text-sm text-gray-300">
-            Next Batch: June 20 – July 12, 2026 &middot; Cairo &middot; 12 Seats
+            Next Batch: July 4 – 26, 2026 &middot; Cairo &middot; 12 Seats
           </span>
         </div>
       </div>
