@@ -4,7 +4,7 @@ const faculty = [
   {
     name: 'Dr. Sameh Talaat',
     photo: '/faculty/sameh-talaat.jpg',
-    initials: 'ST',
+    initials: 'SmT',
     title: 'Associate Research Scientist',
     institution: 'Dept. of Oral Technology, University of Bonn',
     badge: 'Lecturer of Orthodontics, Future University in Egypt',
@@ -20,7 +20,7 @@ const faculty = [
   {
     name: 'Dr. Sara Tag',
     photo: '/faculty/sara-tag.jpg',
-    initials: 'ST',
+    initials: 'SrT',
     title: 'Pediatric Dentist (MSc)',
     institution: '',
     badge: 'Product Lead Manager, K Line Europe GmbH',

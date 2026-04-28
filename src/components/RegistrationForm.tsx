@@ -279,7 +279,7 @@ export default function RegistrationForm() {
         </div>
         <div>
           <Label htmlFor="whatsapp">WhatsApp Number (incl. country code) *</Label>
-          <input id="whatsapp" type="text" className={inputCls('whatsapp')} value={form.whatsapp} onChange={(e) => set('whatsapp', e.target.value)} placeholder="+20 1XX XXX XXXX" />
+          <input id="whatsapp" type="tel" inputMode="tel" className={inputCls('whatsapp')} value={form.whatsapp} onChange={(e) => set('whatsapp', e.target.value)} placeholder="+20 1XX XXX XXXX" />
           <FieldError field="whatsapp" />
         </div>
         <div>

@@ -188,6 +188,24 @@ export async function POST(request: Request) {
     }
 
     if (data.cv?.content) {
+      // Server-side size cap: ~7 MB base64 ≈ 5 MB binary
+      if (data.cv.content.length > 7 * 1024 * 1024) {
+        return NextResponse.json(
+          { success: false, error: 'CV file too large (max 5 MB).' },
+          { status: 400 }
+        )
+      }
+      const allowedTypes = [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      ]
+      if (data.cv.contentType && !allowedTypes.includes(data.cv.contentType)) {
+        return NextResponse.json(
+          { success: false, error: 'CV must be PDF or Word.' },
+          { status: 400 }
+        )
+      }
       adminEmailParams.attachments = [
         {
           filename: data.cv.filename,

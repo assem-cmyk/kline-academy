@@ -1,5 +1,5 @@
 const included = [
-  '8 sessions (40 hours total)',
+  '8 sessions (64 hours total)',
   '15 real case assignments with answer keys',
   'OnyxCeph or Titan software access',
   'Printed session materials',
