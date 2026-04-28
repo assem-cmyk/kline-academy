@@ -1,10 +1,14 @@
+'use client'
+
 const software = [
   {
     name: 'OnyxCeph',
+    logo: '/software/onyxceph-logo.png',
     features: ['Cloud-based aligner planning', '6 seats per batch', 'Beginner-friendly workflow'],
   },
   {
     name: 'Titan',
+    logo: '/software/titan-logo.png',
     features: ['Advanced aligner design software', '6 seats per batch', 'Industry-standard toolchain'],
   },
 ]
@@ -23,7 +27,23 @@ export default function SoftwareSection() {
               key={sw.name}
               className="bg-white rounded-xl p-8 shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
             >
-              <h3 className="text-xl font-bold text-navy mb-4">{sw.name}</h3>
+              {/* Logo */}
+              <div className="h-20 flex items-center justify-center mb-6 bg-white rounded-lg">
+                <img
+                  src={sw.logo}
+                  alt={`${sw.name} logo`}
+                  className="max-h-16 max-w-[180px] object-contain"
+                  onError={(e) => {
+                    // Hide broken image, show fallback name
+                    const target = e.target as HTMLImageElement
+                    target.style.display = 'none'
+                    const fallback = target.nextElementSibling as HTMLElement
+                    if (fallback) fallback.style.display = 'block'
+                  }}
+                />
+                <h3 className="text-2xl font-bold text-navy hidden">{sw.name}</h3>
+              </div>
+
               <ul className="space-y-2">
                 {sw.features.map((f, i) => (
                   <li key={i} className="flex items-center gap-2 text-gray-600 text-sm">

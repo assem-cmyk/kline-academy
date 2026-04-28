@@ -2,9 +2,9 @@
 
 const faculty = [
   {
-    name: 'Dr. Assem K',
+    name: 'Dr. Assem Youssef',
     photo: '/faculty/assem-k.jpg',
-    initials: 'AK',
+    initials: 'AY',
     title: 'Aligner Specialist',
     institution: '',
     badge: 'CEO, K Line Middle East',
