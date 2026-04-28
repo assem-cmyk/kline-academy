@@ -1,9 +1,17 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20)
+    onScroll()
+    window.addEventListener('scroll', onScroll)
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   const navLinks = [
     { label: 'Program', href: '#program' },
@@ -12,29 +20,42 @@ export default function Header() {
   ]
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100">
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? 'bg-white/85 backdrop-blur-xl border-b border-navy-700/8 shadow-sm'
+          : 'bg-transparent'
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <a href="/" className="flex items-center gap-1">
-            <span className="text-xl font-bold text-navy">K Line Academy</span>
-            <span className="w-2 h-2 rounded-full bg-gold inline-block mb-3"></span>
+          <a href="/" className="flex items-center gap-3 group">
+            <img
+              src="/brand/kline-logo.jpg"
+              alt="K Line"
+              className="h-9 w-auto object-contain transition-transform group-hover:scale-105"
+            />
+            <div className="h-7 w-px bg-navy-700/20" />
+            <span className="text-base font-semibold tracking-tight text-navy">
+              Academy<span className="text-teal">.</span>
+            </span>
           </a>
 
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden md:flex items-center gap-9">
             {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
-                className="text-sm font-medium text-text-primary hover:text-navy transition-colors"
+                className="link-underline text-[15px] font-medium text-navy/80 hover:text-navy transition-colors"
               >
                 {link.label}
               </a>
             ))}
             <a
               href="/apply"
-              className="bg-gold hover:bg-gold-dark text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition-colors"
+              className="btn-premium text-white text-[14px] font-semibold px-6 py-3 rounded-full"
             >
               Apply Now
             </a>
@@ -56,21 +77,21 @@ export default function Header() {
 
         {/* Mobile Menu */}
         {mobileOpen && (
-          <div className="md:hidden pb-4 border-t border-gray-100 mt-2 pt-4">
+          <div className="md:hidden pb-4 border-t border-navy-700/10 mt-2 pt-4">
             <nav className="flex flex-col gap-4">
               {navLinks.map((link) => (
                 <a
                   key={link.href}
                   href={link.href}
                   onClick={() => setMobileOpen(false)}
-                  className="text-sm font-medium text-text-primary hover:text-navy"
+                  className="text-sm font-medium text-navy hover:text-teal"
                 >
                   {link.label}
                 </a>
               ))}
               <a
                 href="/apply"
-                className="bg-gold hover:bg-gold-dark text-white text-sm font-semibold px-5 py-2.5 rounded-lg text-center transition-colors"
+                className="btn-premium text-white text-sm font-semibold px-5 py-3 rounded-full text-center"
               >
                 Apply Now
               </a>

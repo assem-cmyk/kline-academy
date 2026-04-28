@@ -3,7 +3,6 @@ const details = [
   '8 Hours per session · 9:00 AM – 5:00 PM',
   'Starting Saturday, July 4, 2026',
   '2 Formats: Offline (Cairo) · Online (Live Zoom)',
-  '4 Offline batches + 2 Online batches per year',
   '12 participants max per batch',
   'Split: 6 seats on OnyxCeph · 6 seats on Titan',
   '15 de-identified real cases per participant',
@@ -23,46 +22,58 @@ const sessions = [
 
 export default function ProgramOverview() {
   return (
-    <section id="program" className="py-16 md:py-24">
+    <section id="program" className="relative py-24 md:py-32 bg-slate-50/40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl md:text-4xl font-bold text-navy text-center mb-16">
-          The Program
-        </h2>
+        <div className="text-center mb-16">
+          <span className="inline-block text-xs font-semibold tracking-[0.2em] text-teal uppercase mb-3">
+            The Program
+          </span>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-navy max-w-2xl mx-auto leading-tight">
+            Four weekends. <span className="gradient-text">Eight intensive sessions.</span>
+          </h2>
+        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
-          {/* Details */}
-          <div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+          {/* Details Card */}
+          <div className="bg-white rounded-3xl p-8 md:p-10 shadow-premium border border-navy-700/5">
+            <h3 className="text-lg font-bold text-navy mb-6 flex items-center gap-2">
+              <span className="w-1 h-6 rounded-full bg-teal" />
+              At a glance
+            </h3>
             <ul className="space-y-4">
               {details.map((item, i) => (
-                <li key={i} className="flex items-start gap-3">
-                  <span className="mt-1.5 w-2 h-2 rounded-full bg-gold shrink-0" />
-                  <span className="text-gray-700">{item}</span>
+                <li key={i} className="flex items-start gap-3 text-navy/75">
+                  <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-teal shrink-0" />
+                  <span className="text-[15px] leading-relaxed">{item}</span>
                 </li>
               ))}
             </ul>
           </div>
 
           {/* Timeline */}
-          <div className="bg-gray-50 rounded-2xl p-8">
-            <h3 className="text-lg font-semibold text-navy mb-6">8-Session Timeline</h3>
-            <div className="space-y-0">
+          <div className="bg-navy-900 rounded-3xl p-8 md:p-10 shadow-premium-lg relative overflow-hidden">
+            <div className="absolute -top-32 -right-32 w-64 h-64 rounded-full bg-teal/10 blur-3xl pointer-events-none" />
+            <h3 className="relative text-lg font-bold text-white mb-7 flex items-center gap-2">
+              <span className="w-1 h-6 rounded-full bg-teal" />
+              8-Session Schedule
+            </h3>
+            <div className="relative space-y-0">
               {sessions.map((s, i) => (
-                <div key={i} className="flex items-stretch gap-4">
+                <div key={i} className="flex items-stretch gap-4 group">
                   <div className="flex flex-col items-center">
-                    <div className="w-10 h-10 rounded-full bg-navy text-white flex items-center justify-center text-sm font-bold shrink-0">
+                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-teal/30 to-teal/10 border border-teal/40 text-teal-light flex items-center justify-center text-sm font-bold shrink-0 group-hover:scale-110 transition-transform">
                       {s.num}
                     </div>
                     {i < sessions.length - 1 && (
-                      <div className="w-0.5 flex-1 bg-gray-200 my-1" />
+                      <div className="w-0.5 flex-1 bg-gradient-to-b from-teal/30 to-teal/0 my-1" />
                     )}
                   </div>
-                  <div className="pb-6">
-                    <p className="text-xs text-gold font-semibold uppercase tracking-wide">
+                  <div className="pb-5">
+                    <p className="text-[10px] font-bold tracking-[0.15em] text-teal uppercase mb-0.5">
                       Session {s.num}
                     </p>
-                    <p className="font-semibold text-navy">{s.title}</p>
-                    <p className="text-sm text-gray-600 mt-0.5">{s.date}</p>
-                    <p className="text-xs text-gray-500">{s.time}</p>
+                    <p className="font-semibold text-white text-[15px]">{s.title}</p>
+                    <p className="text-xs text-slate-400 mt-1">{s.date} · {s.time}</p>
                   </div>
                 </div>
               ))}

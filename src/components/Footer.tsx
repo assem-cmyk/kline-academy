@@ -49,13 +49,23 @@ const socials = [
 
 export default function Footer() {
   return (
-    <footer className="bg-navy py-12 border-t-[3px] border-gold">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <div className="flex items-center justify-center gap-1 mb-4">
-          <span className="text-lg font-bold text-white">K Line Academy</span>
-          <span className="w-1.5 h-1.5 rounded-full bg-gold inline-block mb-2"></span>
+    <footer className="relative bg-navy-900 py-16 border-t border-teal/20 overflow-hidden">
+      {/* Decorative gradient orbs */}
+      <div className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-teal/5 blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-40 -right-40 w-96 h-96 rounded-full bg-teal/5 blur-3xl pointer-events-none" />
+
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        {/* Logo lockup */}
+        <div className="flex items-center justify-center gap-3 mb-5">
+          <div className="bg-white rounded-lg px-3 py-2">
+            <img src="/brand/kline-logo.jpg" alt="K Line" className="h-7 w-auto object-contain" />
+          </div>
+          <div className="h-7 w-px bg-white/20" />
+          <span className="text-lg font-semibold text-white tracking-tight">
+            Academy<span className="text-teal">.</span>
+          </span>
         </div>
-        <p className="text-gray-400 text-sm mb-4">K Line Middle East</p>
+        <p className="text-slate-400 text-sm mb-6">K Line Middle East · A K Line Europe GmbH initiative</p>
 
         {/* Social Icons */}
         <div className="flex items-center justify-center gap-3 mb-6">
@@ -67,7 +77,7 @@ export default function Footer() {
               rel="noopener noreferrer"
               title={s.label}
               aria-label={`K Line on ${s.label}`}
-              className="w-10 h-10 rounded-full bg-white/10 text-white/70 flex items-center justify-center hover:bg-gold hover:text-navy transition-all hover:-translate-y-0.5"
+              className="w-10 h-10 rounded-full bg-white/10 text-white/70 flex items-center justify-center hover:bg-teal hover:text-navy-900 transition-all hover:-translate-y-0.5"
             >
               {s.icon}
             </a>
@@ -76,26 +86,30 @@ export default function Footer() {
 
         <a
           href="mailto:assem@clearxaligners.com"
-          className="text-gold hover:text-gold-dark text-sm transition-colors"
+          className="text-teal hover:text-teal-light text-sm transition-colors"
         >
           assem@clearxaligners.com
         </a>
 
-        <div className="mt-8 pt-8 border-t border-white/10">
-          <p className="text-gray-400 text-xs">
+        <div className="mt-10 pt-8 border-t border-white/10">
+          <p className="text-slate-500 text-xs">
             <a
               href="https://www.kline-europe.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gold hover:underline"
+              className="text-teal hover:text-teal-light"
             >
               kline-europe.com
             </a>
-            {' '}&mdash;{' '}
+            {' '}&middot;{' '}
+            <a
+              href="https://klineacademy.org"
+              className="text-teal hover:text-teal-light"
+            >
+              klineacademy.org
+            </a>
+            {' '}&middot;{' '}
             &copy; {new Date().getFullYear()} K Line Academy. All rights reserved.
-          </p>
-          <p className="text-gray-600 text-xs mt-1">
-            A K Line Europe GmbH initiative
           </p>
         </div>
       </div>

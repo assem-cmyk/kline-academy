@@ -53,48 +53,59 @@ const faculty = [
 
 function FacultyPhoto({ photo, initials, name }: { photo: string; initials: string; name: string }) {
   return (
-    <div className="w-[200px] h-[200px] rounded-full mx-auto mb-4 bg-gray-200 overflow-hidden relative">
-      {/* Placeholder with initials */}
-      <div className="absolute inset-0 flex items-center justify-center bg-navy/10 text-navy text-3xl font-bold">
-        {initials}
+    <div className="relative w-[180px] h-[180px] mx-auto mb-5">
+      {/* Glow ring */}
+      <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-teal/40 via-teal-glow/20 to-transparent opacity-0 group-hover:opacity-100 blur-md transition-opacity duration-300" />
+      <div className="relative w-full h-full rounded-full overflow-hidden bg-navy-700/10 ring-2 ring-white shadow-premium">
+        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-teal/15 to-navy/5 text-navy text-3xl font-bold">
+          {initials}
+        </div>
+        <img
+          src={photo}
+          alt={name}
+          className="absolute inset-0 w-full h-full object-cover"
+          onError={(e) => {
+            (e.target as HTMLImageElement).style.display = 'none'
+          }}
+        />
       </div>
-      {/* Actual image — overlays placeholder if loaded */}
-      <img
-        src={photo}
-        alt={name}
-        className="absolute inset-0 w-full h-full object-cover"
-        onError={(e) => {
-          (e.target as HTMLImageElement).style.display = 'none'
-        }}
-      />
     </div>
   )
 }
 
 export default function Faculty() {
   return (
-    <section id="faculty" className="py-16 md:py-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl md:text-4xl font-bold text-navy text-center mb-4">
-          Your Instructors
-        </h2>
-        <p className="text-gray-600 text-center mb-16 max-w-2xl mx-auto">
-          Every instructor plans aligner cases professionally — this is not theoretical teaching.
-        </p>
+    <section id="faculty" className="relative py-24 md:py-32 bg-white overflow-hidden">
+      <div className="absolute inset-0 opacity-30 pointer-events-none">
+        <div className="absolute top-1/3 right-0 w-[500px] h-[500px] rounded-full bg-teal/5 blur-3xl" />
+      </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16">
+          <span className="inline-block text-xs font-semibold tracking-[0.2em] text-teal uppercase mb-3">
+            Faculty
+          </span>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-navy mb-4">
+            Taught by <span className="gradient-text">practitioners.</span>
+          </h2>
+          <p className="text-navy/60 max-w-2xl mx-auto text-base md:text-lg">
+            Every instructor plans aligner cases professionally — this is not theoretical teaching.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
           {faculty.map((f) => (
             <div
               key={f.name}
-              className="text-center p-6 rounded-xl hover:shadow-lg transition-shadow group"
+              className="group relative text-center p-8 rounded-2xl bg-white border border-navy-700/8 hover:border-teal/30 shadow-premium hover:shadow-premium-lg hover:-translate-y-1 transition-all duration-300"
             >
               <FacultyPhoto photo={f.photo} initials={f.initials} name={f.name} />
               <h3 className="text-lg font-bold text-navy mb-1">{f.name}</h3>
-              <p className="text-sm text-gray-600 mb-1">{f.title}</p>
+              <p className="text-sm text-navy/60 mb-1">{f.title}</p>
               {f.institution && (
-                <p className="text-sm text-gray-500 mb-3">{f.institution}</p>
+                <p className="text-sm text-navy/50 mb-3 italic">{f.institution}</p>
               )}
-              <span className="inline-block bg-gold/10 text-gold-dark text-xs font-medium px-3 py-1.5 rounded-full mt-2">
+              <span className="inline-block bg-teal/10 text-teal-dark text-[11px] font-semibold uppercase tracking-wider px-3 py-1.5 rounded-full mt-3 border border-teal/20">
                 {f.badge}
               </span>
             </div>
