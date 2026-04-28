@@ -1,6 +1,7 @@
 const details = [
   '8 Sessions — Saturdays & Sundays over 4 consecutive weekends',
-  '~5 Hours per session',
+  '8 Hours per session · 9:00 AM – 5:00 PM',
+  'Starting Saturday, June 6, 2026',
   '2 Formats: Offline (Cairo) · Online (Live Zoom)',
   '4 Offline batches + 2 Online batches per year',
   '20 participants max per batch',
@@ -10,10 +11,14 @@ const details = [
 ]
 
 const sessions = [
-  { num: '1', title: 'Introduction to Clear Aligners' },
-  { num: '2', title: 'The Digital Workflow' },
-  { num: '3–7', title: 'Hands-On Workshops (5 sessions)' },
-  { num: '8', title: 'Special Cases & Capstone' },
+  { num: '1', date: 'Sat · June 6, 2026', time: '9:00 AM – 5:00 PM', title: 'Introduction to Clear Aligners' },
+  { num: '2', date: 'Sun · June 7, 2026', time: '9:00 AM – 5:00 PM', title: 'The Digital Workflow' },
+  { num: '3', date: 'Sat · June 13, 2026', time: '9:00 AM – 5:00 PM', title: 'Hands-On Workshop I' },
+  { num: '4', date: 'Sun · June 14, 2026', time: '9:00 AM – 5:00 PM', title: 'Hands-On Workshop II' },
+  { num: '5', date: 'Sat · June 20, 2026', time: '9:00 AM – 5:00 PM', title: 'Hands-On Workshop III' },
+  { num: '6', date: 'Sun · June 21, 2026', time: '9:00 AM – 5:00 PM', title: 'Hands-On Workshop IV' },
+  { num: '7', date: 'Sat · June 27, 2026', time: '9:00 AM – 5:00 PM', title: 'Hands-On Workshop V' },
+  { num: '8', date: 'Sun · June 28, 2026', time: '9:00 AM – 5:00 PM', title: 'Special Cases & Capstone' },
 ]
 
 export default function ProgramOverview() {
@@ -51,11 +56,13 @@ export default function ProgramOverview() {
                       <div className="w-0.5 flex-1 bg-gray-200 my-1" />
                     )}
                   </div>
-                  <div className="pb-8">
-                    <p className="text-sm text-gray-500 font-medium">
+                  <div className="pb-6">
+                    <p className="text-xs text-gold font-semibold uppercase tracking-wide">
                       Session {s.num}
                     </p>
                     <p className="font-semibold text-navy">{s.title}</p>
+                    <p className="text-sm text-gray-600 mt-0.5">{s.date}</p>
+                    <p className="text-xs text-gray-500">{s.time}</p>
                   </div>
                 </div>
               ))}
