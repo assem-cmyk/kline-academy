@@ -139,8 +139,8 @@ function applicantEmailHtml(d: FormPayload): string {
         <ol style="font-size:14px;color:#333;line-height:2;padding-left:20px;margin:0 0 24px">
           <li>We'll review your application within 48 hours</li>
           <li>If accepted, we'll contact you via WhatsApp or email</li>
-          <li>A 50% deposit ($500 USD) confirms your seat</li>
-          <li>Full balance ($500 USD) is due at Session 1</li>
+          <li>A 50% deposit ($375 USD) confirms your seat</li>
+          <li>Full balance ($375 USD) is due at Session 1</li>
         </ol>
         <p style="font-size:14px;color:#333;line-height:1.7;margin:0 0 24px">
           Questions? Reply to this email or message us on WhatsApp.

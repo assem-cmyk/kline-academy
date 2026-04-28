@@ -432,7 +432,7 @@ export default function RegistrationForm() {
               className="mt-1 w-4 h-4 accent-gold"
             />
             <span className="text-sm text-gray-700">
-              I confirm I am ready for the $1,000 USD investment. I understand payment is made via bank transfer or Instapay after acceptance. A 50% deposit ($500 USD) secures my seat, with the remaining balance due at Session 1.
+              I confirm I am ready for the $750 USD investment. I understand payment is made via bank transfer or Instapay after acceptance. A 50% deposit ($375 USD) secures my seat, with the remaining balance due at Session 1.
             </span>
           </label>
           <FieldError field="investmentConfirmed" />

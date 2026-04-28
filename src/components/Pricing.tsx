@@ -18,7 +18,7 @@ export default function Pricing() {
             Investment
           </p>
           <p className="text-5xl md:text-6xl font-bold text-white mb-8">
-            $1,000 <span className="text-2xl font-normal text-gray-400">USD</span>
+            $750 <span className="text-2xl font-normal text-gray-400">USD</span>
           </p>
 
           <div className="text-left max-w-md mx-auto mb-10">
@@ -37,7 +37,7 @@ export default function Pricing() {
 
           <p className="text-gray-400 text-sm mb-8">
             Payment via bank transfer or Instapay after acceptance.
-            <br />A 50% deposit ($500) secures your seat.
+            <br />A 50% deposit ($375) secures your seat.
           </p>
 
           <a
