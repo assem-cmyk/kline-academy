@@ -1,5 +1,5 @@
 const included = [
-  '8 sessions (64 hours total)',
+  '8 sessions (53 hours total)',
   '15 real case assignments with answer keys',
   'OnyxCeph or Titan software access',
   'Printed session materials',
@@ -49,7 +49,7 @@ export default function Pricing() {
               First Batch Discount · Save $250
             </span>
             <p className="text-slate-400 text-sm mb-10">
-              4 weekends · 64 hours · 15 cases
+              4 weekends · 53 hours · 15 cases
             </p>
 
             <div className="text-left max-w-md mx-auto mb-10 space-y-2.5">
