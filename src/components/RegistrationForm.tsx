@@ -88,6 +88,13 @@ export default function RegistrationForm() {
     } catch {}
   }, [])
 
+  // If there's only one batch, auto-select it so users don't have to "pick" the only option
+  useEffect(() => {
+    if (BATCHES.length === 1 && !form.batch) {
+      setForm((prev) => ({ ...prev, batch: BATCHES[0] }))
+    }
+  }, [form.batch])
+
   // Save to localStorage on every change
   useEffect(() => {
     try {
@@ -298,12 +305,27 @@ export default function RegistrationForm() {
 
         <div>
           <Label htmlFor="batch">Batch *</Label>
-          <select id="batch" className={inputCls('batch')} value={form.batch} onChange={(e) => set('batch', e.target.value)}>
-            <option value="">Select a batch...</option>
-            {BATCHES.map((b) => (
-              <option key={b} value={b}>{b}</option>
-            ))}
-          </select>
+          {BATCHES.length === 1 ? (
+            <div className="flex items-start gap-3 border border-teal/30 bg-teal/5 rounded-lg px-4 py-3">
+              <span className="mt-0.5 inline-flex w-5 h-5 rounded-full bg-teal/15 items-center justify-center shrink-0">
+                <svg className="w-3 h-3 text-teal" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              </span>
+              <div className="text-sm">
+                <p className="font-semibold text-navy">{BATCHES[0]}</p>
+                <p className="text-gray-500 text-xs mt-1">Only the first batch is currently open. You will be enrolled in this batch on acceptance.</p>
+              </div>
+              <input type="hidden" id="batch" value={form.batch} />
+            </div>
+          ) : (
+            <select id="batch" className={inputCls('batch')} value={form.batch} onChange={(e) => set('batch', e.target.value)}>
+              <option value="">Select a batch...</option>
+              {BATCHES.map((b) => (
+                <option key={b} value={b}>{b}</option>
+              ))}
+            </select>
+          )}
           <FieldError field="batch" />
         </div>
 

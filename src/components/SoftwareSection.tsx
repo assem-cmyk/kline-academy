@@ -41,10 +41,11 @@ export default function SoftwareSection() {
                   alt={`${sw.name} logo`}
                   className="max-h-14 max-w-[260px] object-contain relative z-10 transition-transform group-hover:scale-105"
                   onError={(e) => {
-                    const target = e.target as HTMLImageElement
+                    const target = e.target as HTMLImageElement | null
+                    if (!target) return
                     target.style.display = 'none'
-                    const fallback = target.nextElementSibling as HTMLElement
-                    if (fallback) fallback.style.display = 'block'
+                    const fallback = target.nextElementSibling
+                    if (fallback instanceof HTMLElement) fallback.style.display = 'block'
                   }}
                 />
                 <h3 className="text-3xl font-bold text-navy hidden">{sw.name}</h3>
