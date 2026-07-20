@@ -18,15 +18,10 @@ module.exports = {
         teal: {
           DEFAULT: '#06B0AE',  // primary K Line accent
           dark: '#037371',     // AA-safe on white for small text
+          darker: '#025957',   // hover state for dark-teal buttons
           light: '#3DD4D2',
           glow: '#6FFFE9',     // bright accent / glow
         },
-        // Legacy support — map gold → teal so existing classes keep working
-        gold: {
-          DEFAULT: '#06B0AE',
-          dark: '#048A88',
-        },
-        'gold-dark': '#048A88',
         'text-primary': '#0B132B',
       },
       fontFamily: {

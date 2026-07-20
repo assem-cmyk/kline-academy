@@ -1,13 +1,10 @@
 'use client'
 
-import { useSearchParams } from 'next/navigation'
 import { Suspense, useState } from 'react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 
 function SuccessContent() {
-  const searchParams = useSearchParams()
-  const batch = searchParams.get('batch') || 'your selected batch'
   const [copied, setCopied] = useState(false)
 
   function copyLink() {
@@ -20,8 +17,8 @@ function SuccessContent() {
   return (
     <main id="main" className="pt-24 pb-16 px-4 sm:px-6 lg:px-8 min-h-screen flex items-center justify-center">
       <div className="max-w-lg mx-auto text-center">
-        <div className="w-20 h-20 bg-gold/10 rounded-full flex items-center justify-center mx-auto mb-8">
-          <svg aria-hidden="true" className="w-10 h-10 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="w-20 h-20 bg-teal/10 rounded-full flex items-center justify-center mx-auto mb-8">
+          <svg aria-hidden="true" className="w-10 h-10 text-teal-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
           </svg>
         </div>
@@ -33,7 +30,7 @@ function SuccessContent() {
           Thank you for applying.
         </p>
         <p className="text-gray-500 mb-4 leading-relaxed">
-          We&apos;ve received your application for <strong>{batch}</strong>.
+          We&apos;ve received your application for <strong>Batch 2 in Cairo (September 18 – October 10, 2026)</strong>.
           We review every application within 48 hours and will contact you with a decision
           via WhatsApp or email. If accepted, you&apos;ll receive payment details to confirm
           your seat with a 50% deposit.
@@ -64,7 +61,7 @@ function SuccessContent() {
           </a>
           <button
             onClick={copyLink}
-            className="border-2 border-gold text-gold-dark hover:bg-gold/5 font-semibold px-6 py-3 rounded-lg transition-colors relative"
+            className="border-2 border-teal-dark text-teal-dark hover:bg-teal/5 font-semibold px-6 py-3 rounded-lg transition-colors relative"
           >
             {copied ? 'Link Copied!' : 'Share K Line Academy'}
           </button>

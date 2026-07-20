@@ -6,8 +6,10 @@ const FROM = 'K Line Academy <noreply@klineacademy.org>'
 
 /* ── Server-side allowlists (must mirror the form) ── */
 const BATCHES = [
-  'Offline — Batch 2 (Cairo) · Sep 18 – Oct 10, 2026 · Fri & Sat · 4 weekends',
+  'In-Person — Batch 2 (Cairo) · Sep 18 – Oct 10, 2026 · Fri & Sat · 4 weekends',
 ]
+// Human-readable batch name for applicant-facing copy (never show the raw data string)
+const BATCH_FRIENDLY = 'Batch 2 in Cairo (September 18 – October 10, 2026)'
 const SOFTWARE = ['OnyxCeph', 'Titan', 'No preference']
 const WORKFLOWS = ['In-house planning', 'Outsource to lab', 'Mixed']
 const CHALLENGES = [
@@ -68,6 +70,21 @@ function isValidPhone(val: string) {
 function sanitizeFilename(name: string): string {
   const cleaned = name.replace(/[^a-zA-Z0-9._\- ]/g, '_').slice(0, 100)
   return cleaned || 'cv.pdf'
+}
+
+// Verify the decoded file actually starts with the magic bytes of a PDF (%PDF),
+// DOCX (PK zip header), or legacy DOC (OLE compound file) — don't trust the
+// client-reported MIME type alone.
+function hasValidMagicBytes(base64: string): boolean {
+  try {
+    const head = Buffer.from(base64.slice(0, 16), 'base64')
+    const isPdf = head[0] === 0x25 && head[1] === 0x50 && head[2] === 0x44 && head[3] === 0x46
+    const isZip = head[0] === 0x50 && head[1] === 0x4b
+    const isOle = head[0] === 0xd0 && head[1] === 0xcf && head[2] === 0x11 && head[3] === 0xe0
+    return isPdf || isZip || isOle
+  } catch {
+    return false
+  }
 }
 
 /* ── Simple in-memory rate limit: max 5 submissions per IP per 10 minutes ── */
@@ -204,7 +221,7 @@ function applicantEmailHtml(d: FormPayload): string {
       <div style="background:#fff;padding:32px;border:1px solid #e5e5e5;border-top:none;border-radius:0 0 12px 12px">
         <p style="font-size:16px;color:${NAVY};margin:0 0 16px">Hi ${firstName},</p>
         <p style="font-size:14px;color:#333;line-height:1.7;margin:0 0 16px">
-          We've received your application for K Line Academy — <strong>${escapeHtml(d.batch)}</strong>.
+          We've received your application for K Line Academy — <strong>${BATCH_FRIENDLY}</strong>.
         </p>
         <p style="font-size:14px;color:#333;line-height:1.7;margin:0 0 8px"><strong>Here's what happens next:</strong></p>
         <ol style="font-size:14px;color:#333;line-height:2;padding-left:20px;margin:0 0 24px">
@@ -274,10 +291,10 @@ export async function POST(request: Request) {
     }
 
     if (data.cv?.content) {
-      // Server-side size cap: ~7 MB base64 ≈ 5 MB binary
-      if (data.cv.content.length > 7 * 1024 * 1024) {
+      // Server-side size cap: ~4.3 MB base64 ≈ 3 MB binary (mirrors the client cap)
+      if (data.cv.content.length > 4.3 * 1024 * 1024) {
         return NextResponse.json(
-          { success: false, error: 'CV file too large (max 5 MB).' },
+          { success: false, error: 'CV file too large (max 3 MB).' },
           { status: 400 }
         )
       }
@@ -289,6 +306,12 @@ export async function POST(request: Request) {
       if (!data.cv.contentType || !allowedTypes.includes(data.cv.contentType)) {
         return NextResponse.json(
           { success: false, error: 'CV must be PDF or Word.' },
+          { status: 400 }
+        )
+      }
+      if (!hasValidMagicBytes(data.cv.content)) {
+        return NextResponse.json(
+          { success: false, error: 'CV file appears corrupted. Please re-export it as PDF and try again.' },
           { status: 400 }
         )
       }

@@ -1,4 +1,8 @@
-const faqs = [
+export const faqs = [
+  {
+    q: 'Who is the program for? Do I need prior aligner experience?',
+    a: 'The program is designed for dentists and orthodontists who want to plan aligner cases digitally. No prior aligner planning experience is required — the curriculum starts from fundamentals and scales up to complex cases, and the application asks about your experience only so we can calibrate, not to filter beginners out.',
+  },
   {
     q: 'How does the application process work?',
     a: 'Submit the application form (it takes about 5 minutes — have your CV ready as PDF or Word). We review every application within 48 hours and contact you with a decision via WhatsApp or email. Applying is free and non-binding; no payment is due until you are accepted.',
@@ -26,6 +30,14 @@ const faqs = [
   {
     q: 'Where exactly does the course take place?',
     a: 'In person in Cairo, Egypt, on Fridays (4:30–9:30 PM) and Saturdays (9:30 AM–4:30 PM). The exact venue address is shared with accepted applicants before the first session.',
+  },
+  {
+    q: 'What equipment do I need to bring?',
+    a: 'Software access is included in the course fee. Detailed setup and equipment instructions — including laptop requirements for your assigned software — are shared with accepted applicants before Session 1.',
+  },
+  {
+    q: 'What if I have to miss a session?',
+    a: 'Sessions build on each other, so full attendance is strongly recommended. If you must miss one, let us know in advance — we will share the session materials and help you catch up before the next session. Session recordings are not provided, as all case work is confidential to the cohort.',
   },
   {
     q: 'What happens after graduation?',

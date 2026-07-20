@@ -1,5 +1,3 @@
-'use client'
-
 const highlights = [
   {
     title: 'Aligner Market Landscape',

@@ -6,7 +6,7 @@ import SoftwareSection from '@/components/SoftwareSection'
 import Faculty from '@/components/Faculty'
 import BusinessModule from '@/components/BusinessModule'
 import Benefits from '@/components/Benefits'
-import Faq from '@/components/Faq'
+import Faq, { faqs } from '@/components/Faq'
 import Pricing from '@/components/Pricing'
 import Footer from '@/components/Footer'
 
@@ -31,11 +31,29 @@ const courseJsonLd = {
     url: `${SITE_URL}/apply`,
     category: 'Professional Training',
   },
+  courseWorkload: 'PT48H',
   hasCourseInstance: {
     '@type': 'CourseInstance',
     courseMode: 'Onsite',
     startDate: '2026-09-18',
     endDate: '2026-10-10',
+    courseWorkload: 'PT48H',
+    courseSchedule: {
+      '@type': 'Schedule',
+      repeatFrequency: 'Weekly',
+      repeatCount: 4,
+      byDay: ['https://schema.org/Friday', 'https://schema.org/Saturday'],
+      startDate: '2026-09-18',
+      endDate: '2026-10-10',
+    },
+    instructor: [
+      { '@type': 'Person', name: 'Dr. Sameh Talaat' },
+      { '@type': 'Person', name: 'Dr. Yasmine El Kabani' },
+      { '@type': 'Person', name: 'Dr. Sara Tag' },
+      { '@type': 'Person', name: 'Dr. Khalid Ibrahim' },
+      { '@type': 'Person', name: 'Dr. Amr Radwan' },
+      { '@type': 'Person', name: 'Dr. Nehal Ahmed' },
+    ],
     location: {
       '@type': 'Place',
       name: 'Cairo, Egypt',
@@ -46,6 +64,16 @@ const courseJsonLd = {
       },
     },
   },
+}
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
 }
 
 export default function Home() {
@@ -67,6 +95,10 @@ export default function Home() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(courseJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
     </>
   )

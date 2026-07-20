@@ -13,6 +13,15 @@ export default function Header() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  useEffect(() => {
+    if (!mobileOpen) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMobileOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [mobileOpen])
+
   const navLinks = [
     { label: 'Program', href: '/#program' },
     { label: 'Faculty', href: '/#faculty' },
@@ -36,6 +45,8 @@ export default function Header() {
             <img
               src="/brand/kline-logo.jpg"
               alt="K Line"
+              width={200}
+              height={200}
               className="h-9 w-auto object-contain transition-transform group-hover:scale-105"
             />
             <div className="h-7 w-px bg-navy-700/20" />
@@ -45,7 +56,7 @@ export default function Header() {
           </a>
 
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-9">
+          <nav aria-label="Main" className="hidden md:flex items-center gap-9">
             {navLinks.map((link) => (
               <a
                 key={link.href}
@@ -82,7 +93,7 @@ export default function Header() {
         {/* Mobile Menu */}
         {mobileOpen && (
           <div id="mobile-menu" className="md:hidden pb-4 border-t border-navy-700/10 mt-2 pt-4">
-            <nav className="flex flex-col gap-4">
+            <nav aria-label="Mobile" className="flex flex-col gap-4">
               {navLinks.map((link) => (
                 <a
                   key={link.href}

@@ -60,10 +60,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ===== PREMIUM BUTTON ===== */
+/* Dark enough for white 15px text to pass WCAG AA (4.5:1) across the whole gradient */
 .btn-premium {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(135deg, #06B0AE 0%, #048A88 100%);
+  background: linear-gradient(135deg, #037371 0%, #025957 100%);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 8px 24px -8px rgba(6, 176, 174, 0.5);
 }
@@ -106,10 +107,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ===== FORM FOCUS RING ===== */
+/* Strong enough to meet the 3:1 non-text contrast threshold */
 input:focus, select:focus, textarea:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(6, 176, 174, 0.2);
-  border-color: #06B0AE;
+  box-shadow: 0 0 0 3px rgba(3, 115, 113, 0.45);
+  border-color: #037371;
 }
 
 /* ===== STEP TRANSITION ===== */

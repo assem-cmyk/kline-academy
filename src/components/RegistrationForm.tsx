@@ -21,6 +21,8 @@ interface FormData {
   investmentConfirmed: boolean
 }
 
+type FormErrors = Partial<Record<keyof FormData, string>>
+
 const EMPTY: FormData = {
   fullName: '',
   email: '',
@@ -43,7 +45,7 @@ const STORAGE_KEY = 'kline-academy-form'
 const STEPS = ['Personal Info', 'Batch & Software', 'Clinical Background', 'Review & Submit']
 
 const BATCHES = [
-  'Offline — Batch 2 (Cairo) · Sep 18 – Oct 10, 2026 · Fri & Sat · 4 weekends',
+  'In-Person — Batch 2 (Cairo) · Sep 18 – Oct 10, 2026 · Fri & Sat · 4 weekends',
 ]
 
 const CHALLENGES = [
@@ -56,6 +58,8 @@ const CHALLENGES = [
   'All of the above',
   'Other',
 ]
+
+const MAX_CV_BYTES = 3 * 1024 * 1024 // 3 MB — stays comfortably under hosting body-size limits once base64-encoded
 
 /* ── Helpers ── */
 function isValidEmail(email: string) {
@@ -70,12 +74,33 @@ function isValidPhone(val: string) {
   return /^\+?[0-9]{10,15}$/.test(stripPhone(val))
 }
 
+function scrollBehavior(): ScrollBehavior {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'
+}
+
+/* ── Shared field components (module scope so they aren't recreated every render) ── */
+function FieldError({ field, errors }: { field: keyof FormData; errors: FormErrors }) {
+  return errors[field] ? (
+    <p id={`${field}-error`} role="alert" className="field-error text-red-600 text-sm mt-1">
+      {errors[field]}
+    </p>
+  ) : null
+}
+
+function Label({ htmlFor, children }: { htmlFor: string; children: React.ReactNode }) {
+  return (
+    <label htmlFor={htmlFor} className="block text-sm font-medium text-navy mb-1.5">
+      {children}
+    </label>
+  )
+}
+
 /* ── Component ── */
 export default function RegistrationForm() {
   const router = useRouter()
   const [step, setStep] = useState(1)
   const [form, setForm] = useState<FormData>(EMPTY)
-  const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({})
+  const [errors, setErrors] = useState<FormErrors>({})
   const [submitting, setSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState('')
   // Honeypot — humans never see or fill this field
@@ -129,16 +154,22 @@ export default function RegistrationForm() {
     setErrors((prev) => ({ ...prev, [field]: undefined }))
   }, [])
 
-  function scrollToError() {
+  // Move both scroll AND keyboard focus to the first invalid field
+  function focusFirstError() {
     setTimeout(() => {
-      const el = formRef.current?.querySelector('.field-error')
-      el?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      const el =
+        formRef.current?.querySelector<HTMLElement>('[aria-invalid="true"]') ??
+        formRef.current?.querySelector<HTMLElement>('.field-error')
+      if (el) {
+        el.scrollIntoView({ behavior: scrollBehavior(), block: 'center' })
+        el.focus({ preventScroll: true })
+      }
     }, 50)
   }
 
   /* ── Validation per step ── */
   function validateStep(s: number): boolean {
-    const errs: Partial<Record<keyof FormData, string>> = {}
+    const errs: FormErrors = {}
 
     if (s === 1) {
       if (!form.fullName.trim()) errs.fullName = 'Full name is required'
@@ -182,7 +213,7 @@ export default function RegistrationForm() {
     setErrors(errs)
     const hasCvError = s === 3 && !cvFile
     if (Object.keys(errs).length > 0 || hasCvError) {
-      scrollToError()
+      focusFirstError()
       return false
     }
     return true
@@ -192,9 +223,8 @@ export default function RegistrationForm() {
     const file = e.target.files?.[0]
     if (!file) return
 
-    // Max 5 MB
-    if (file.size > 5 * 1024 * 1024) {
-      setCvError('File too large. Max size is 5 MB.')
+    if (file.size > MAX_CV_BYTES) {
+      setCvError('File too large. Max size is 3 MB — try exporting a compressed PDF.')
       setCvFile(null)
       return
     }
@@ -225,13 +255,13 @@ export default function RegistrationForm() {
   function next() {
     if (validateStep(step)) {
       setStep(step + 1)
-      window.scrollTo({ top: 0, behavior: 'smooth' })
+      window.scrollTo({ top: 0, behavior: scrollBehavior() })
     }
   }
 
   function back() {
     setStep(step - 1)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    window.scrollTo({ top: 0, behavior: scrollBehavior() })
   }
 
   async function submit() {
@@ -270,7 +300,7 @@ export default function RegistrationForm() {
         localStorage.removeItem(STORAGE_KEY)
         // Keep `submitting` true — the button stays disabled while we navigate away,
         // preventing a double submission
-        router.push(`/apply/success?batch=${encodeURIComponent(form.batch)}`)
+        router.push('/apply/success')
       } else {
         setSubmitError(data.error || 'Something went wrong. Your answers are saved — please try again.')
         setSubmitting(false)
@@ -281,25 +311,8 @@ export default function RegistrationForm() {
     }
   }
 
-  /* ── Shared field components ── */
-  function FieldError({ field }: { field: keyof FormData }) {
-    return errors[field] ? (
-      <p id={`${field}-error`} role="alert" className="field-error text-red-600 text-sm mt-1">
-        {errors[field]}
-      </p>
-    ) : null
-  }
-
-  function Label({ htmlFor, children }: { htmlFor: string; children: React.ReactNode }) {
-    return (
-      <label htmlFor={htmlFor} className="block text-sm font-medium text-navy mb-1.5">
-        {children}
-      </label>
-    )
-  }
-
   const inputCls = (field: keyof FormData) =>
-    `w-full border ${errors[field] ? 'border-red-400' : 'border-gray-300'} rounded-lg px-4 py-3 text-sm focus:border-gold transition-colors`
+    `w-full border ${errors[field] ? 'border-red-400' : 'border-gray-300'} rounded-lg px-4 py-3 text-sm focus:border-teal-dark transition-colors`
 
   const fieldAria = (field: keyof FormData) => ({
     'aria-invalid': errors[field] ? true : undefined,
@@ -313,22 +326,22 @@ export default function RegistrationForm() {
         <div>
           <Label htmlFor="fullName">Full Name *</Label>
           <input id="fullName" name="name" type="text" autoComplete="name" className={inputCls('fullName')} value={form.fullName} onChange={(e) => set('fullName', e.target.value)} placeholder="Your full name" {...fieldAria('fullName')} />
-          <FieldError field="fullName" />
+          <FieldError field="fullName" errors={errors} />
         </div>
         <div>
           <Label htmlFor="email">Email Address *</Label>
           <input id="email" name="email" type="email" autoComplete="email" className={inputCls('email')} value={form.email} onChange={(e) => set('email', e.target.value)} placeholder="you@example.com" {...fieldAria('email')} />
-          <FieldError field="email" />
+          <FieldError field="email" errors={errors} />
         </div>
         <div>
           <Label htmlFor="whatsapp">WhatsApp Number (incl. country code) *</Label>
           <input id="whatsapp" name="tel" type="tel" inputMode="tel" autoComplete="tel" className={inputCls('whatsapp')} value={form.whatsapp} onChange={(e) => set('whatsapp', e.target.value)} placeholder="+20 1XX XXX XXXX" {...fieldAria('whatsapp')} />
-          <FieldError field="whatsapp" />
+          <FieldError field="whatsapp" errors={errors} />
         </div>
         <div>
           <Label htmlFor="city">Country / City *</Label>
           <input id="city" name="city" type="text" autoComplete="address-level2" className={inputCls('city')} value={form.city} onChange={(e) => set('city', e.target.value)} placeholder="Cairo, Egypt" {...fieldAria('city')} />
-          <FieldError field="city" />
+          <FieldError field="city" errors={errors} />
         </div>
         {/* Honeypot — hidden from humans, bots often fill every field */}
         <div className="hidden" aria-hidden="true">
@@ -350,7 +363,7 @@ export default function RegistrationForm() {
               <span id="batch-label" className="block text-sm font-medium text-navy mb-1.5">Batch *</span>
               <div aria-labelledby="batch-label" className="flex items-start gap-3 border border-teal/30 bg-teal/5 rounded-lg px-4 py-3">
                 <span className="mt-0.5 inline-flex w-5 h-5 rounded-full bg-teal/15 items-center justify-center shrink-0">
-                  <svg aria-hidden="true" className="w-3 h-3 text-teal" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+                  <svg aria-hidden="true" className="w-3 h-3 text-teal-dark" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
                 </span>
@@ -371,15 +384,20 @@ export default function RegistrationForm() {
               </select>
             </>
           )}
-          <FieldError field="batch" />
+          <FieldError field="batch" errors={errors} />
         </div>
 
         <div>
           <span id="software-label" className="block text-sm font-medium text-navy mb-1.5">Software Preference *</span>
-          <div role="group" aria-labelledby="software-label" className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-2">
+          <div
+            role="group"
+            aria-labelledby="software-label"
+            aria-describedby={errors.software ? 'software-error' : undefined}
+            className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-2"
+          >
             {[
               { value: 'OnyxCeph', label: 'OnyxCeph', desc: 'Established planning software' },
-              { value: 'Titan', label: 'Titan', desc: 'Advanced dental design' },
+              { value: 'Titan', label: 'Titan', desc: 'Precision design & staging' },
               { value: 'No preference', label: 'No preference', desc: 'Assign me based on availability' },
             ].map((opt) => (
               <button
@@ -389,7 +407,7 @@ export default function RegistrationForm() {
                 onClick={() => set('software', opt.value)}
                 className={`border rounded-lg p-4 text-left transition-all ${
                   form.software === opt.value
-                    ? 'border-gold bg-gold/5 ring-2 ring-gold/30'
+                    ? 'border-teal-dark bg-teal/5 ring-2 ring-teal-dark/30'
                     : 'border-gray-200 hover:border-gray-300'
                 }`}
               >
@@ -398,7 +416,7 @@ export default function RegistrationForm() {
               </button>
             ))}
           </div>
-          <FieldError field="software" />
+          <FieldError field="software" errors={errors} />
           <p className="text-gray-500 text-xs mt-2">
             Each batch has 15 seats. Software allocation is first-come, first-served upon acceptance.
           </p>
@@ -420,13 +438,13 @@ export default function RegistrationForm() {
             <option value="Outsource to lab">Outsource to lab</option>
             <option value="Mixed">Mixed</option>
           </select>
-          <FieldError field="workflow" />
+          <FieldError field="workflow" errors={errors} />
         </div>
 
         <div>
           <Label htmlFor="casesCompleted">Aligner cases completed end-to-end *</Label>
           <input id="casesCompleted" type="number" min="0" className={inputCls('casesCompleted')} value={form.casesCompleted} onChange={(e) => set('casesCompleted', e.target.value)} placeholder="0" {...fieldAria('casesCompleted')} />
-          <FieldError field="casesCompleted" />
+          <FieldError field="casesCompleted" errors={errors} />
         </div>
 
         <div>
@@ -437,7 +455,7 @@ export default function RegistrationForm() {
               <option key={c} value={c}>{c}</option>
             ))}
           </select>
-          <FieldError field="challenge" />
+          <FieldError field="challenge" errors={errors} />
         </div>
 
         {/* Radio questions */}
@@ -457,13 +475,14 @@ export default function RegistrationForm() {
                     value={val}
                     checked={form[field] === val}
                     onChange={() => set(field, val)}
-                    className="w-4 h-4 text-gold accent-gold"
+                    className="w-4 h-4 accent-teal-dark"
+                    {...fieldAria(field)}
                   />
                   <span className="text-sm">{val}</span>
                 </label>
               ))}
             </div>
-            <FieldError field={field} />
+            <FieldError field={field} errors={errors} />
           </fieldset>
         ))}
 
@@ -479,7 +498,7 @@ export default function RegistrationForm() {
             {...fieldAria('goal')}
           />
           <div className="flex justify-between mt-1">
-            <FieldError field="goal" />
+            <FieldError field="goal" errors={errors} />
             <span className={`text-xs ${form.goal.trim().length < 20 ? 'text-gray-500' : 'text-green-600'}`}>
               {form.goal.trim().length}/20 min
             </span>
@@ -491,8 +510,8 @@ export default function RegistrationForm() {
           <label htmlFor="cv" className="block text-sm font-medium text-navy mb-1.5">
             Upload your CV *
           </label>
-          <div className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors focus-within:ring-2 focus-within:ring-teal/50 ${
-            cvError ? 'border-red-400 bg-red-50/30' : cvFile ? 'border-gold bg-gold/5' : 'border-gray-300 hover:border-gray-400'
+          <div className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors focus-within:ring-2 focus-within:ring-teal-dark/50 ${
+            cvError ? 'border-red-400 bg-red-50/30' : cvFile ? 'border-teal-dark bg-teal/5' : 'border-gray-300 hover:border-gray-400'
           }`}>
             <input
               id="cv"
@@ -505,7 +524,7 @@ export default function RegistrationForm() {
             />
             {cvFile ? (
               <div>
-                <svg aria-hidden="true" className="w-8 h-8 text-gold mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg aria-hidden="true" className="w-8 h-8 text-teal-dark mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <p className="text-sm font-medium text-navy">{cvFile.name}</p>
@@ -524,7 +543,7 @@ export default function RegistrationForm() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                 </svg>
                 <p className="text-sm text-navy font-medium">Click to upload your CV</p>
-                <p className="text-xs text-gray-500 mt-1">PDF or Word · Max 5 MB</p>
+                <p className="text-xs text-gray-500 mt-1">PDF or Word · Max 3 MB</p>
               </label>
             )}
           </div>
@@ -581,7 +600,7 @@ export default function RegistrationForm() {
               <button
                 type="button"
                 onClick={() => setStep(sec.editStep)}
-                className="text-gold-dark hover:text-navy text-sm font-medium"
+                className="text-teal-dark hover:text-navy text-sm font-medium"
               >
                 Edit
               </button>
@@ -603,14 +622,14 @@ export default function RegistrationForm() {
               type="checkbox"
               checked={form.investmentConfirmed}
               onChange={(e) => set('investmentConfirmed', e.target.checked)}
-              className="mt-1 w-4 h-4 accent-gold"
+              className="mt-1 w-4 h-4 accent-teal-dark"
             />
             <span className="text-sm text-gray-700">
               I confirm I am ready for the 40,000 EGP investment. I understand payment is made via bank transfer or InstaPay after acceptance. A 50% deposit (20,000 EGP) secures my seat, with the remaining balance due at Session 1. I understand that refunds are available up to 10 days before the first session; after that, fees are non-refundable. I agree to the processing of my data as described in the{' '}
               <a href="/privacy" target="_blank" className="underline text-navy hover:text-teal-dark">Privacy Policy</a>.
             </span>
           </label>
-          <FieldError field="investmentConfirmed" />
+          <FieldError field="investmentConfirmed" errors={errors} />
         </div>
 
         {submitError && (
@@ -636,7 +655,7 @@ export default function RegistrationForm() {
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-colors ${
                     active
-                      ? 'bg-gold text-white'
+                      ? 'bg-teal-dark text-white'
                       : completed
                       ? 'bg-navy text-white'
                       : 'bg-gray-200 text-gray-500'
@@ -650,7 +669,7 @@ export default function RegistrationForm() {
                     stepNum
                   )}
                 </div>
-                <span className={`text-xs mt-1.5 hidden sm:block ${active ? 'text-gold-dark font-semibold' : 'text-gray-500'}`}>
+                <span className={`text-xs mt-1.5 hidden sm:block ${active ? 'text-teal-dark font-semibold' : 'text-gray-500'}`}>
                   {label}
                 </span>
               </div>
@@ -710,7 +729,7 @@ export default function RegistrationForm() {
           {step < 4 ? (
             <button
               type="submit"
-              className="bg-gold hover:bg-gold-dark text-white font-semibold px-6 py-2.5 rounded-lg text-sm transition-colors flex items-center gap-1"
+              className="bg-teal-dark hover:bg-teal-darker text-white font-semibold px-6 py-2.5 rounded-lg text-sm transition-colors flex items-center gap-1"
             >
               Next <span aria-hidden="true">&rarr;</span>
             </button>
@@ -718,7 +737,7 @@ export default function RegistrationForm() {
             <button
               type="submit"
               disabled={submitting}
-              className="bg-gold hover:bg-gold-dark disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold px-8 py-2.5 rounded-lg text-sm transition-colors flex items-center gap-2"
+              className="bg-teal-dark hover:bg-teal-darker disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold px-8 py-2.5 rounded-lg text-sm transition-colors flex items-center gap-2"
             >
               {submitting ? (
                 <>

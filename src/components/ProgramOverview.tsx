@@ -2,7 +2,7 @@ const details = [
   '8 Sessions — Fridays & Saturdays over 4 consecutive weekends',
   'Fridays 4:30 – 9:30 PM · Saturdays 9:30 AM – 4:30 PM',
   'Starting Friday, September 18, 2026',
-  'In-person in Cairo, Egypt',
+  'Held in person in Cairo, Egypt',
   '15 participants max per batch',
   '15 de-identified real cases per participant',
   'Pre & post assessment with measurable skill lift',

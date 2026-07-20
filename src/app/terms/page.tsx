@@ -38,11 +38,22 @@ export default function TermsPage() {
             </section>
 
             <section>
-              <h2 className="text-xl font-bold text-navy mb-3">Refunds</h2>
+              <h2 className="text-xl font-bold text-navy mb-3">Refunds &amp; cancellations</h2>
               <ul className="list-disc pl-6 space-y-1">
-                <li>Full refund available up to 10 days before the first session.</li>
-                <li>Within 10 days of the first session, and after the program starts, fees are non-refundable.</li>
+                <li>Cancel 10 or more days before the first session: full refund of everything you have paid.</li>
+                <li>Cancel less than 10 days before the first session, or after the program has started: fees are non-refundable.</li>
+                <li>Refunds are processed within 14 business days via the original payment method.</li>
               </ul>
+            </section>
+
+            <section>
+              <h2 className="text-xl font-bold text-navy mb-3">If we cancel or postpone</h2>
+              <p>
+                If K Line Academy cancels a batch or changes its dates — for example due to
+                under-enrollment or circumstances beyond our control — enrolled participants may choose
+                either a full refund of all amounts paid (processed within 14 business days) or a
+                guaranteed seat in the next available batch.
+              </p>
             </section>
 
             <section>

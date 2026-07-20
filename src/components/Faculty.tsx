@@ -1,5 +1,3 @@
-'use client'
-
 const faculty = [
   {
     name: 'Dr. Sameh Talaat',
@@ -79,9 +77,6 @@ function FacultyPhoto({
           decoding="async"
           className="absolute inset-0 w-full h-full object-cover"
           style={{ objectPosition, transform: `scale(${scale})` }}
-          onError={(e) => {
-            (e.target as HTMLImageElement).style.display = 'none'
-          }}
         />
       </div>
     </div>

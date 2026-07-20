@@ -58,7 +58,7 @@ export default function Footer() {
         {/* Logo lockup */}
         <div className="flex items-center justify-center gap-3 mb-5">
           <div className="bg-white rounded-lg px-3 py-2">
-            <img src="/brand/kline-logo.jpg" alt="K Line" loading="lazy" decoding="async" className="h-7 w-auto object-contain" />
+            <img src="/brand/kline-logo.jpg" alt="K Line" width={200} height={200} loading="lazy" decoding="async" className="h-7 w-auto object-contain" />
           </div>
           <div className="h-7 w-px bg-white/20" />
           <span className="text-lg font-semibold text-white tracking-tight">
