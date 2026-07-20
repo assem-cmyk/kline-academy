@@ -34,7 +34,15 @@ export const faqs = [
   },
   {
     q: 'What equipment do I need to bring?',
-    a: 'Software access is included in the course fee. Detailed setup and equipment instructions — including laptop requirements for your assigned software — are shared with accepted applicants before Session 1.',
+    a: 'Plan to bring your own laptop for the hands-on sessions — software access is included in the course fee, and exact setup instructions and specifications for your assigned software (OnyxCeph or Titan) are shared with accepted applicants before Session 1.',
+  },
+  {
+    q: 'What language is the program taught in?',
+    a: 'Course materials and the planning software are in English. Sessions are delivered by our Egyptian faculty, with discussion in both English and Arabic — you will be comfortable in either.',
+  },
+  {
+    q: "What if I'm not accepted?",
+    a: 'We contact every applicant with a decision within 48 hours — applying is free and non-binding. If the batch is full or the timing is not the right fit, we will offer you priority consideration for the next batch.',
   },
   {
     q: 'What if I have to miss a session?',

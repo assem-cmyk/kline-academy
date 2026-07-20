@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import Link from 'next/link'
 
 export default function Header({ overDark = false }: { overDark?: boolean }) {
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -55,7 +56,7 @@ export default function Header({ overDark = false }: { overDark?: boolean }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <a href="/" className="flex items-center gap-3 group">
+          <Link href="/" className="flex items-center gap-3 group">
             <img
               src="/brand/kline-logo.jpg"
               alt="K Line"
@@ -67,7 +68,7 @@ export default function Header({ overDark = false }: { overDark?: boolean }) {
             <span className={`text-base font-semibold tracking-tight transition-colors ${wordmarkCls}`}>
               Academy<span className="text-teal">.</span>
             </span>
-          </a>
+          </Link>
 
           {/* Desktop Nav */}
           <nav aria-label="Main" className="hidden md:flex items-center gap-9">
@@ -80,12 +81,12 @@ export default function Header({ overDark = false }: { overDark?: boolean }) {
                 {link.label}
               </a>
             ))}
-            <a
+            <Link
               href="/apply"
               className="btn-premium text-white text-[14px] font-semibold px-6 py-3 rounded-full"
             >
               Apply Now
-            </a>
+            </Link>
           </nav>
 
           {/* Mobile Hamburger */}
@@ -95,7 +96,7 @@ export default function Header({ overDark = false }: { overDark?: boolean }) {
             className="md:hidden p-2"
             aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={mobileOpen}
-            aria-controls="mobile-menu"
+            aria-controls={mobileOpen ? 'mobile-menu' : undefined}
           >
             <div className="w-6 h-5 flex flex-col justify-between">
               <span className={`block h-0.5 transition-all ${burgerBarCls} ${mobileOpen ? 'rotate-45 translate-y-2' : ''}`} />
@@ -119,12 +120,12 @@ export default function Header({ overDark = false }: { overDark?: boolean }) {
                   {link.label}
                 </a>
               ))}
-              <a
+              <Link
                 href="/apply"
                 className="btn-premium text-white text-sm font-semibold px-5 py-3 rounded-full text-center"
               >
                 Apply Now
-              </a>
+              </Link>
             </nav>
           </div>
         )}

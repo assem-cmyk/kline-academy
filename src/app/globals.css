@@ -107,11 +107,22 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ===== FORM FOCUS RING ===== */
-/* Strong enough to meet the 3:1 non-text contrast threshold */
+/* Solid double ring — white gap + 4.9:1 teal ring, comfortably above the 3:1 non-text threshold */
 input:focus, select:focus, textarea:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(3, 115, 113, 0.45);
+  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #037371;
   border-color: #037371;
+}
+
+/* Placeholder text at 4.8:1 on white (default gray-400 fails AA) */
+input::placeholder, textarea::placeholder {
+  color: #6B7280;
+  opacity: 1;
+}
+
+/* Delayed entrance animations start hidden instead of flashing at full opacity */
+.animate-fade-in, .animate-fade-in-up {
+  animation-fill-mode: backwards;
 }
 
 /* ===== STEP TRANSITION ===== */

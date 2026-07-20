@@ -182,7 +182,7 @@ export default function RegistrationForm() {
       if (!form.whatsapp.trim()) errs.whatsapp = 'WhatsApp number is required'
       else if (!isValidPhone(form.whatsapp))
         errs.whatsapp = 'Enter a valid number with country code, e.g. +20 1XX XXX XXXX'
-      if (!form.city.trim()) errs.city = 'Country / City is required'
+      if (!form.city.trim()) errs.city = 'City / Country is required'
     }
 
     if (s === 2) {
@@ -307,6 +307,11 @@ export default function RegistrationForm() {
 
       if (data.success) {
         localStorage.removeItem(STORAGE_KEY)
+        // Let the success page know whether the confirmation email actually sent,
+        // so it never promises an email that isn't coming
+        try {
+          sessionStorage.setItem('kl-confirm-email', data.applicantOk === false ? 'failed' : 'sent')
+        } catch {}
         // Keep `submitting` true — the button stays disabled while we navigate away,
         // preventing a double submission
         router.push('/apply/success')
@@ -323,9 +328,12 @@ export default function RegistrationForm() {
   const inputCls = (field: keyof FormData) =>
     `w-full border ${errors[field] ? 'border-red-500' : 'border-gray-500'} rounded-lg px-4 py-3 text-sm focus:border-teal-dark transition-colors`
 
-  const fieldAria = (field: keyof FormData) => ({
+  const fieldAria = (field: keyof FormData, extraDescribedBy?: string) => ({
     'aria-invalid': errors[field] ? true : undefined,
-    'aria-describedby': errors[field] ? `${field}-error` : undefined,
+    'aria-describedby':
+      [errors[field] ? `${field}-error` : null, extraDescribedBy]
+        .filter(Boolean)
+        .join(' ') || undefined,
   })
 
   /* ── Step Renderers ── */
@@ -348,7 +356,7 @@ export default function RegistrationForm() {
           <FieldError field="whatsapp" errors={errors} />
         </div>
         <div>
-          <Label htmlFor="city">Country / City *</Label>
+          <Label htmlFor="city">City / Country *</Label>
           <input id="city" name="city" type="text" autoComplete="address-level2" maxLength={100} className={inputCls('city')} value={form.city} onChange={(e) => set('city', e.target.value)} placeholder="Cairo, Egypt" {...fieldAria('city')} />
           <FieldError field="city" errors={errors} />
         </div>
@@ -399,7 +407,7 @@ export default function RegistrationForm() {
         <div>
           <span id="software-label" className="block text-sm font-medium text-navy mb-1.5">Software Preference *</span>
           <div
-            role="group"
+            role="radiogroup"
             aria-labelledby="software-label"
             aria-describedby={errors.software ? 'software-error' : undefined}
             className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-2"
@@ -409,20 +417,25 @@ export default function RegistrationForm() {
               { value: 'Titan', label: 'Titan', desc: 'Precision design & staging' },
               { value: 'No preference', label: 'No preference', desc: 'Assign me based on availability' },
             ].map((opt) => (
-              <button
+              <label
                 key={opt.value}
-                type="button"
-                aria-pressed={form.software === opt.value}
-                onClick={() => set('software', opt.value)}
-                className={`border rounded-lg p-4 text-left transition-all ${
+                className={`border rounded-lg p-4 text-left transition-all cursor-pointer focus-within:ring-2 focus-within:ring-teal-dark ${
                   form.software === opt.value
                     ? 'border-teal-dark bg-teal/5 ring-2 ring-teal-dark/30'
                     : 'border-gray-500 hover:border-navy'
                 }`}
               >
+                <input
+                  type="radio"
+                  name="software"
+                  value={opt.value}
+                  checked={form.software === opt.value}
+                  onChange={() => set('software', opt.value)}
+                  className="sr-only"
+                />
                 <p className="font-semibold text-navy text-sm">{opt.label}</p>
                 <p className="text-xs text-gray-500 mt-1">{opt.desc}</p>
-              </button>
+              </label>
             ))}
           </div>
           <FieldError field="software" errors={errors} />
@@ -505,11 +518,11 @@ export default function RegistrationForm() {
             placeholder="Be specific — what will you do differently in your clinic after this program?"
             rows={4}
             maxLength={2000}
-            {...fieldAria('goal')}
+            {...fieldAria('goal', 'goal-counter')}
           />
           <div className="flex justify-between mt-1">
             <FieldError field="goal" errors={errors} />
-            <span className={`text-xs ${form.goal.trim().length < 20 ? 'text-gray-500' : 'text-green-700'}`}>
+            <span id="goal-counter" className={`text-xs ${form.goal.trim().length < 20 ? 'text-gray-500' : 'text-green-700'}`}>
               {form.goal.trim().length}/20 min
             </span>
           </div>
@@ -572,7 +585,7 @@ export default function RegistrationForm() {
           ['Full Name', form.fullName],
           ['Email', form.email],
           ['WhatsApp', form.whatsapp],
-          ['Country / City', form.city],
+          ['City / Country', form.city],
         ],
       },
       {
@@ -671,7 +684,7 @@ export default function RegistrationForm() {
                       ? 'bg-teal-dark text-white'
                       : completed
                       ? 'bg-navy text-white'
-                      : 'bg-gray-200 text-gray-500'
+                      : 'bg-gray-200 text-gray-700'
                   }`}
                 >
                   {completed ? (
@@ -682,7 +695,7 @@ export default function RegistrationForm() {
                     stepNum
                   )}
                 </div>
-                <span className={`text-xs mt-1.5 hidden sm:block ${active ? 'text-teal-dark font-semibold' : 'text-gray-500'}`}>
+                <span className={`text-xs mt-1.5 hidden sm:block ${active ? 'text-teal-dark font-semibold' : 'text-gray-600'}`}>
                   {label}
                 </span>
               </div>

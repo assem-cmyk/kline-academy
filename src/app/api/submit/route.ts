@@ -91,8 +91,13 @@ function hasValidMagicBytes(base64: string): boolean {
 const RATE_WINDOW_MS = 10 * 60 * 1000
 const RATE_MAX = 5
 const rateMap = new Map<string, number[]>()
-// email -> last successful submission timestamp (for retry dedup)
-const recentSubmissions = new Map<string, number>()
+// email -> last successful submission (for retry dedup; sig distinguishes a
+// genuine correction from a duplicate network retry)
+const recentSubmissions = new Map<string, { ts: number; sig: string }>()
+
+function submissionSig(d: FormPayload): string {
+  return `${d.fullName}|${d.whatsapp}|${d.goal.length}|${d.cv?.content.length ?? 0}`
+}
 
 function isRateLimited(ip: string): boolean {
   const now = Date.now()
@@ -138,7 +143,7 @@ function validate(data: FormPayload): string | null {
     return 'Valid email is required'
   if (!data.whatsapp?.trim() || data.whatsapp.length > 30 || !isValidPhone(data.whatsapp))
     return 'Valid WhatsApp number is required'
-  if (!data.city?.trim() || data.city.length > 100) return 'Country / City is required'
+  if (!data.city?.trim() || data.city.length > 100) return 'City / Country is required'
   if (!BATCHES.includes(data.batch)) return 'Batch selection is required'
   if (!SOFTWARE.includes(data.software)) return 'Software preference is required'
   if (!WORKFLOWS.includes(data.workflow)) return 'Workflow is required'
@@ -249,7 +254,7 @@ function applicantEmailHtml(d: FormPayload): string {
         <ol style="font-size:14px;color:#333;line-height:2;padding-left:20px;margin:0 0 24px">
           <li>We review every application within 48 hours</li>
           <li>We'll contact you with a decision via WhatsApp or email</li>
-          <li>If accepted, a 50% deposit (20,000 EGP) confirms your seat</li>
+          <li>If accepted, a 50% deposit (20,000 EGP) secures your seat</li>
           <li>The remaining balance (20,000 EGP) is due at Session 1</li>
         </ol>
         <p style="font-size:13px;color:#666;line-height:1.6;margin:0 0 16px;padding:12px 16px;background:#e9f8f8;border-left:3px solid ${TEAL};border-radius:4px">
@@ -280,7 +285,7 @@ function applicantEmailText(d: FormPayload): string {
     "Here's what happens next:",
     '1. We review every application within 48 hours',
     "2. We'll contact you with a decision via WhatsApp or email",
-    '3. If accepted, a 50% deposit (20,000 EGP) confirms your seat',
+    '3. If accepted, a 50% deposit (20,000 EGP) secures your seat',
     '4. The remaining balance (20,000 EGP) is due at Session 1',
     '',
     'Refund policy: full refund available up to 10 days before the first session; after that, fees are non-refundable. Full terms: https://klineacademy.org/terms',
@@ -305,7 +310,10 @@ export async function POST(request: Request) {
       )
     }
 
-    const ip = (request.headers.get('x-forwarded-for') ?? 'unknown').split(',')[0].trim()
+    // Use the LAST x-forwarded-for hop (appended by the nearest trusted proxy) —
+    // the first entry is client-controlled and spoofable
+    const xff = (request.headers.get('x-forwarded-for') ?? 'unknown').split(',')
+    const ip = xff[xff.length - 1].trim()
     if (isRateLimited(ip)) {
       return NextResponse.json(
         { success: false, error: 'Too many requests. Please try again in a few minutes.' },
@@ -332,11 +340,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: validationError }, { status: 400 })
     }
 
-    // Idempotency: an identical email re-submitted within 2 minutes is almost
-    // certainly a retry after a lost response — acknowledge without re-sending.
+    // Idempotency: the SAME content re-submitted within 2 minutes is a retry
+    // after a lost response — acknowledge without re-sending. A changed payload
+    // (corrected CV, fixed number) passes through as a fresh application.
     const dedupKey = data.email.trim().toLowerCase()
+    const sig = submissionSig(data)
     const lastSeen = recentSubmissions.get(dedupKey)
-    if (lastSeen && Date.now() - lastSeen < 2 * 60 * 1000) {
+    if (lastSeen && Date.now() - lastSeen.ts < 2 * 60 * 1000 && lastSeen.sig === sig) {
       return NextResponse.json({ success: true, deduplicated: true })
     }
 
@@ -418,11 +428,11 @@ export async function POST(request: Request) {
     // Success ONLY if the application actually reached the admissions inbox.
     // The applicant confirmation is best-effort.
     if (adminOk) {
-      recentSubmissions.set(dedupKey, Date.now())
+      recentSubmissions.set(dedupKey, { ts: Date.now(), sig })
       if (recentSubmissions.size > 1000) {
         const cutoff = Date.now() - 10 * 60 * 1000
-        recentSubmissions.forEach((t, k) => {
-          if (t < cutoff) recentSubmissions.delete(k)
+        recentSubmissions.forEach((v, k) => {
+          if (v.ts < cutoff) recentSubmissions.delete(k)
         })
       }
       return NextResponse.json({ success: true, adminOk, applicantOk })

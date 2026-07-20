@@ -1,11 +1,19 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 
 function SuccessContent() {
   const [copied, setCopied] = useState(false)
+  const [emailFailed, setEmailFailed] = useState(false)
+
+  useEffect(() => {
+    try {
+      setEmailFailed(sessionStorage.getItem('kl-confirm-email') === 'failed')
+    } catch {}
+  }, [])
 
   function copyLink() {
     navigator.clipboard.writeText(window.location.origin).then(() => {
@@ -36,7 +44,16 @@ function SuccessContent() {
           your seat with a 50% deposit.
         </p>
         <p className="text-gray-500 text-sm mb-8 leading-relaxed">
-          A confirmation email is on its way — check your spam folder if you don&apos;t see it.
+          {emailFailed ? (
+            <>
+              We couldn&apos;t deliver a confirmation email to your address, but your application
+              <strong> was received</strong> — save our WhatsApp number so we can stay in touch.
+            </>
+          ) : (
+            <>
+              A confirmation email is on its way — check your spam folder if you don&apos;t see it.
+            </>
+          )}{' '}
           Haven&apos;t heard from us within 48 hours?{' '}
           <a
             href="https://wa.me/201227624659"
@@ -53,12 +70,12 @@ function SuccessContent() {
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <a
+          <Link
             href="/"
             className="bg-navy hover:bg-navy/90 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
           >
             Back to Home
-          </a>
+          </Link>
           <button
             onClick={copyLink}
             className="border-2 border-teal-dark text-teal-dark hover:bg-teal/5 font-semibold px-6 py-3 rounded-lg transition-colors relative"
@@ -67,14 +84,14 @@ function SuccessContent() {
           </button>
         </div>
 
-        {copied && (
-          <div
-            role="status"
-            className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-navy text-white text-sm px-6 py-3 rounded-lg shadow-lg"
-          >
-            Link copied to clipboard!
-          </div>
-        )}
+        {/* Always-mounted live region so the copy confirmation is reliably announced */}
+        <div role="status" aria-live="polite">
+          {copied && (
+            <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-navy text-white text-sm px-6 py-3 rounded-lg shadow-lg">
+              Link copied to clipboard!
+            </div>
+          )}
+        </div>
       </div>
     </main>
   )

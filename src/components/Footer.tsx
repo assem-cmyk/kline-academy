@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 const socials = [
   {
     label: 'Website',
@@ -93,9 +95,9 @@ export default function Footer() {
 
         <div className="mt-10 pt-8 border-t border-white/10">
           <p className="text-slate-400 text-xs mb-3">
-            <a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
+            <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
             {' '}&middot;{' '}
-            <a href="/terms" className="hover:text-white transition-colors">Terms &amp; Refund Policy</a>
+            <Link href="/terms" className="hover:text-white transition-colors">Terms &amp; Refund Policy</Link>
           </p>
           <p className="text-slate-400 text-xs">
             <a

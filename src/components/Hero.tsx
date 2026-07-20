@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 export default function Hero() {
   return (
     <section className="relative bg-navy-900 overflow-hidden pt-32 pb-24 md:pt-40 md:pb-32">
@@ -38,7 +40,7 @@ export default function Hero() {
 
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-14 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-          <a
+          <Link
             href="/apply"
             className="btn-premium text-white font-semibold px-8 py-4 rounded-full text-[15px] inline-flex items-center gap-2 group"
           >
@@ -46,7 +48,7 @@ export default function Hero() {
             <svg aria-hidden="true" className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
-          </a>
+          </Link>
           <a
             href="#program"
             className="text-white/90 hover:text-white font-medium px-8 py-4 rounded-full text-[15px] border border-white/15 hover:border-white/30 hover:bg-white/5 transition-all backdrop-blur-sm"

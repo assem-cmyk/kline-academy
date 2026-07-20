@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 const included = [
   '8 sessions (48 hours total)',
   '15 real case assignments with answer keys',
@@ -88,7 +90,7 @@ export default function Pricing() {
               </div>
             </div>
 
-            <a
+            <Link
               href="/apply"
               className="btn-premium inline-flex items-center gap-2 text-white font-semibold px-10 py-4 rounded-full text-base group"
             >
@@ -96,7 +98,7 @@ export default function Pricing() {
               <svg aria-hidden="true" className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
               </svg>
-            </a>
+            </Link>
             <p className="text-slate-400 text-sm mt-6">
               Questions before applying?{' '}
               <a

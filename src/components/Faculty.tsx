@@ -53,14 +53,10 @@ function FacultyPhoto({
   photo,
   initials,
   name,
-  objectPosition = 'center top',
-  scale = 1,
 }: {
   photo: string
   initials: string
   name: string
-  objectPosition?: string
-  scale?: number
 }) {
   return (
     <div className="relative w-[180px] h-[180px] mx-auto mb-5">
@@ -75,8 +71,7 @@ function FacultyPhoto({
           alt={name}
           loading="lazy"
           decoding="async"
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{ objectPosition, transform: `scale(${scale})` }}
+          className="absolute inset-0 w-full h-full object-cover object-top"
         />
       </div>
     </div>
