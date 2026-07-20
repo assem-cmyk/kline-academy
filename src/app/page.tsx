@@ -32,7 +32,7 @@ const courseJsonLd = {
     url: `${SITE_URL}/apply`,
     validFrom: '2026-07-20',
     validThrough: '2026-09-18',
-    category: 'Professional Training',
+    category: 'Paid',
   },
   courseWorkload: 'PT48H',
   hasCourseInstance: {

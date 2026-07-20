@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     type: 'website',
   },
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
     title: 'Terms & Refund Policy — K Line Academy',
     description: 'Program terms, payment schedule, and refund policy for the K Line Academy digital aligner planning bootcamp.',
   },

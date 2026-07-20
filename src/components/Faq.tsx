@@ -38,7 +38,7 @@ export const faqs = [
   },
   {
     q: 'What language is the program taught in?',
-    a: 'Course materials and the planning software are in English. Sessions are delivered by our Egyptian faculty, with discussion in both English and Arabic — you will be comfortable in either.',
+    a: 'Course materials and the planning software are in English. Sessions are delivered by our Egyptian faculty, with discussion in both English and Arabic, so you can follow comfortably in either language.',
   },
   {
     q: "What if I'm not accepted?",

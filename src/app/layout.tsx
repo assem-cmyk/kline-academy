@@ -58,18 +58,18 @@ const organizationJsonLd = {
   '@type': 'Organization',
   name: 'K Line Academy',
   url: SITE_URL,
-  logo: `${SITE_URL}/brand/kline-logo.jpg`,
+  logo: `${SITE_URL}/icon.png`,
   email: 'assem@clearxaligners.com',
   parentOrganization: {
     '@type': 'Organization',
     name: 'K Line Europe GmbH',
     url: 'https://www.kline-europe.com',
+    sameAs: [
+      'https://www.facebook.com/klineurope',
+      'https://www.instagram.com/kline_europe',
+      'https://www.linkedin.com/company/k-line-europe-gmbh/',
+    ],
   },
-  sameAs: [
-    'https://www.facebook.com/klineurope',
-    'https://www.instagram.com/kline_europe',
-    'https://www.linkedin.com/company/k-line-europe-gmbh/',
-  ],
 }
 
 export default function RootLayout({

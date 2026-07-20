@@ -432,6 +432,7 @@ export default function RegistrationForm() {
                   checked={form.software === opt.value}
                   onChange={() => set('software', opt.value)}
                   className="sr-only"
+                  aria-invalid={errors.software ? true : undefined}
                 />
                 <p className="font-semibold text-navy text-sm">{opt.label}</p>
                 <p className="text-xs text-gray-500 mt-1">{opt.desc}</p>

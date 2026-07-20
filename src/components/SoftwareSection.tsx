@@ -62,7 +62,7 @@ export default function SoftwareSection() {
         </div>
 
         <p className="text-center text-navy/70 text-sm mt-10 max-w-2xl mx-auto">
-          Select your preferred software in the application form.
+          You&apos;ll master one platform end-to-end — select your preference in the application form.
           Allocation is first-come, first-served upon acceptance.
         </p>
       </div>

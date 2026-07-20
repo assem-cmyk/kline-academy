@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     type: 'website',
   },
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
     title: 'Privacy Policy — K Line Academy',
     description: 'How K Line Academy collects, uses, and protects the personal data you share when applying to the program.',
   },

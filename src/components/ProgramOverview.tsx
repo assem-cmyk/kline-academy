@@ -5,7 +5,7 @@ const details = [
   'Held in person in Cairo, Egypt',
   '15 participants max per batch',
   '15 de-identified real cases per participant',
-  'Pre & post assessment with measurable skill lift',
+  'Pre & post assessments that measure your improvement',
 ]
 
 const sessions = [

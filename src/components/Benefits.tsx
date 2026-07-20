@@ -6,7 +6,7 @@ const benefits = [
       </svg>
     ),
     title: 'Exclusive Hiring Pipeline',
-    desc: "K Line Europe GmbH hires 1–2 top designers exclusively from Academy graduates per batch — your direct route onto the team.",
+    desc: "K Line Europe GmbH hires 1–2 top designers per batch, exclusively from Academy graduates — your direct route onto the team.",
   },
   {
     icon: (

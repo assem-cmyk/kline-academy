@@ -63,7 +63,7 @@ function FacultyPhoto({
       {/* Glow ring */}
       <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-teal/40 via-teal-glow/20 to-transparent opacity-0 group-hover:opacity-100 blur-md transition-opacity duration-300" />
       <div className="relative w-full h-full rounded-full overflow-hidden bg-navy-700/10 ring-2 ring-white shadow-premium">
-        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-teal/15 to-navy/5 text-navy text-3xl font-bold">
+        <div aria-hidden="true" className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-teal/15 to-navy/5 text-navy text-3xl font-bold">
           {initials}
         </div>
         <img
@@ -94,7 +94,7 @@ export default function Faculty() {
             Taught by <span className="gradient-text">practitioners.</span>
           </h2>
           <p className="text-navy/60 max-w-2xl mx-auto text-base md:text-lg">
-            Every instructor plans aligner cases professionally — this is not theoretical teaching.
+            Our faculty plan, review, and research aligner cases every day — this is not theoretical teaching.
           </p>
         </div>
 
