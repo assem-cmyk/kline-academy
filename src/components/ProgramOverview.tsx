@@ -9,8 +9,8 @@ const details = [
 ]
 
 const sessions = [
-  { num: '1', date: 'Fri · Sep 18, 2026', time: '4:30 PM – 9:30 PM', title: 'Introduction to Clear Aligners' },
-  { num: '2', date: 'Sat · Sep 19, 2026', time: '9:30 AM – 4:30 PM', title: 'The Digital Workflow' },
+  { num: '1', date: 'Fri · Sep 18, 2026', time: '4:30 PM – 9:30 PM', title: 'The Digital Workflow' },
+  { num: '2', date: 'Sat · Sep 19, 2026', time: '9:30 AM – 4:30 PM', title: 'Introduction to Clear Aligners' },
   { num: '3', date: 'Fri · Sep 25, 2026', time: '4:30 PM – 9:30 PM', title: 'Hands-On Workshop I' },
   { num: '4', date: 'Sat · Sep 26, 2026', time: '9:30 AM – 4:30 PM', title: 'Hands-On Workshop II' },
   { num: '5', date: 'Fri · Oct 2, 2026', time: '4:30 PM – 9:30 PM', title: 'Hands-On Workshop III' },
