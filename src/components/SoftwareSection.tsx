@@ -4,14 +4,14 @@ const software = [
   {
     name: 'OnyxCeph',
     logo: '/software/onyxceph-logo.png',
-    tagline: 'Cloud-based aligner planning',
-    features: ['Beginner-friendly workflow', 'Instant cloud collaboration'],
+    tagline: 'Established orthodontic planning software',
+    features: ['Beginner-friendly workflow', 'Module-based 3D setup & staging'],
   },
   {
     name: 'Titan',
     logo: '/software/titan-logo.png',
     tagline: 'Advanced dental design',
-    features: ['Industry-standard toolchain', 'Pro-grade precision'],
+    features: ['Advanced staging & mechanics control', 'Pro-grade precision'],
   },
 ]
 
@@ -20,7 +20,7 @@ export default function SoftwareSection() {
     <section className="relative py-24 md:py-28 bg-slate-50/40 overflow-hidden">
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <span className="inline-block text-xs font-semibold tracking-[0.2em] text-teal uppercase mb-3">
+          <span className="inline-block text-xs font-semibold tracking-[0.2em] text-teal-dark uppercase mb-3">
             Software Platforms
           </span>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-navy max-w-3xl mx-auto leading-tight">
@@ -39,6 +39,8 @@ export default function SoftwareSection() {
                 <img
                   src={sw.logo}
                   alt={`${sw.name} logo`}
+                  loading="lazy"
+                  decoding="async"
                   className="max-h-14 max-w-[260px] object-contain relative z-10 transition-transform group-hover:scale-105"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement | null
@@ -57,7 +59,7 @@ export default function SoftwareSection() {
                 {sw.features.map((f, i) => (
                   <li key={i} className="flex items-center gap-3 text-navy/80 text-[15px]">
                     <span className="w-5 h-5 rounded-full bg-teal/10 flex items-center justify-center shrink-0">
-                      <svg className="w-3 h-3 text-teal" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+                      <svg aria-hidden="true" className="w-3 h-3 text-teal" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                       </svg>
                     </span>
@@ -69,7 +71,7 @@ export default function SoftwareSection() {
           ))}
         </div>
 
-        <p className="text-center text-navy/50 text-sm mt-10 max-w-2xl mx-auto">
+        <p className="text-center text-navy/70 text-sm mt-10 max-w-2xl mx-auto">
           Select your preferred software in the application form.
           Allocation is first-come, first-served upon acceptance.
         </p>

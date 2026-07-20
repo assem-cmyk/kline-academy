@@ -66,6 +66,10 @@ function stripPhone(val: string) {
   return val.replace(/[\s\-()]/g, '')
 }
 
+function isValidPhone(val: string) {
+  return /^\+?[0-9]{10,15}$/.test(stripPhone(val))
+}
+
 /* ── Component ── */
 export default function RegistrationForm() {
   const router = useRouter()
@@ -74,17 +78,26 @@ export default function RegistrationForm() {
   const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({})
   const [submitting, setSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState('')
+  // Honeypot — humans never see or fill this field
+  const [website, setWebsite] = useState('')
   const formRef = useRef<HTMLDivElement>(null)
+  const headingRef = useRef<HTMLHeadingElement>(null)
+  const mountedRef = useRef(false)
 
   // CV file (not persisted to localStorage — must re-upload on refresh)
   const [cvFile, setCvFile] = useState<File | null>(null)
   const [cvError, setCvError] = useState('')
 
-  // Load from localStorage on mount
+  // Load from localStorage on mount — merge with defaults so schema changes never crash,
+  // and drop any stale batch value that no longer exists
   useEffect(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY)
-      if (saved) setForm(JSON.parse(saved))
+      if (saved) {
+        const parsed = { ...EMPTY, ...JSON.parse(saved) } as FormData
+        if (parsed.batch && !BATCHES.includes(parsed.batch)) parsed.batch = ''
+        setForm(parsed)
+      }
     } catch {}
   }, [])
 
@@ -101,6 +114,15 @@ export default function RegistrationForm() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(form))
     } catch {}
   }, [form])
+
+  // Move focus to the step heading when the step changes (skip initial mount)
+  useEffect(() => {
+    if (mountedRef.current) {
+      headingRef.current?.focus()
+    } else {
+      mountedRef.current = true
+    }
+  }, [step])
 
   const set = useCallback((field: keyof FormData, value: string | boolean) => {
     setForm((prev) => ({ ...prev, [field]: value }))
@@ -121,9 +143,10 @@ export default function RegistrationForm() {
     if (s === 1) {
       if (!form.fullName.trim()) errs.fullName = 'Full name is required'
       if (!form.email.trim()) errs.email = 'Email is required'
-      else if (!isValidEmail(form.email)) errs.email = 'Enter a valid email'
+      else if (!isValidEmail(form.email.trim())) errs.email = 'Enter a valid email'
       if (!form.whatsapp.trim()) errs.whatsapp = 'WhatsApp number is required'
-      else if (stripPhone(form.whatsapp).length < 10) errs.whatsapp = 'Enter at least 10 digits'
+      else if (!isValidPhone(form.whatsapp))
+        errs.whatsapp = 'Enter a valid number with country code, e.g. +20 1XX XXX XXXX'
       if (!form.city.trim()) errs.city = 'Country / City is required'
     }
 
@@ -222,8 +245,13 @@ export default function RegistrationForm() {
 
     try {
       const cvBase64 = await fileToBase64(cvFile)
+      // Trim all string fields once before sending
+      const trimmed = Object.fromEntries(
+        Object.entries(form).map(([k, v]) => [k, typeof v === 'string' ? v.trim() : v])
+      ) as unknown as FormData
       const payload = {
-        ...form,
+        ...trimmed,
+        website, // honeypot
         cv: {
           filename: cvFile.name,
           contentType: cvFile.type,
@@ -240,14 +268,15 @@ export default function RegistrationForm() {
 
       if (data.success) {
         localStorage.removeItem(STORAGE_KEY)
-        const firstName = form.fullName.split(' ')[0]
-        router.push(`/apply/success?name=${encodeURIComponent(firstName)}&batch=${encodeURIComponent(form.batch)}`)
+        // Keep `submitting` true — the button stays disabled while we navigate away,
+        // preventing a double submission
+        router.push(`/apply/success?batch=${encodeURIComponent(form.batch)}`)
       } else {
         setSubmitError(data.error || 'Something went wrong. Your answers are saved — please try again.')
+        setSubmitting(false)
       }
     } catch {
       setSubmitError('Something went wrong. Your answers are saved — please try again.')
-    } finally {
       setSubmitting(false)
     }
   }
@@ -255,7 +284,9 @@ export default function RegistrationForm() {
   /* ── Shared field components ── */
   function FieldError({ field }: { field: keyof FormData }) {
     return errors[field] ? (
-      <p className="field-error text-red-600 text-sm mt-1">{errors[field]}</p>
+      <p id={`${field}-error`} role="alert" className="field-error text-red-600 text-sm mt-1">
+        {errors[field]}
+      </p>
     ) : null
   }
 
@@ -270,29 +301,39 @@ export default function RegistrationForm() {
   const inputCls = (field: keyof FormData) =>
     `w-full border ${errors[field] ? 'border-red-400' : 'border-gray-300'} rounded-lg px-4 py-3 text-sm focus:border-gold transition-colors`
 
+  const fieldAria = (field: keyof FormData) => ({
+    'aria-invalid': errors[field] ? true : undefined,
+    'aria-describedby': errors[field] ? `${field}-error` : undefined,
+  })
+
   /* ── Step Renderers ── */
   function renderStep1() {
     return (
       <div className="space-y-5">
         <div>
           <Label htmlFor="fullName">Full Name *</Label>
-          <input id="fullName" type="text" className={inputCls('fullName')} value={form.fullName} onChange={(e) => set('fullName', e.target.value)} placeholder="Your full name" />
+          <input id="fullName" name="name" type="text" autoComplete="name" className={inputCls('fullName')} value={form.fullName} onChange={(e) => set('fullName', e.target.value)} placeholder="Your full name" {...fieldAria('fullName')} />
           <FieldError field="fullName" />
         </div>
         <div>
           <Label htmlFor="email">Email Address *</Label>
-          <input id="email" type="email" className={inputCls('email')} value={form.email} onChange={(e) => set('email', e.target.value)} placeholder="you@example.com" />
+          <input id="email" name="email" type="email" autoComplete="email" className={inputCls('email')} value={form.email} onChange={(e) => set('email', e.target.value)} placeholder="you@example.com" {...fieldAria('email')} />
           <FieldError field="email" />
         </div>
         <div>
           <Label htmlFor="whatsapp">WhatsApp Number (incl. country code) *</Label>
-          <input id="whatsapp" type="tel" inputMode="tel" className={inputCls('whatsapp')} value={form.whatsapp} onChange={(e) => set('whatsapp', e.target.value)} placeholder="+20 1XX XXX XXXX" />
+          <input id="whatsapp" name="tel" type="tel" inputMode="tel" autoComplete="tel" className={inputCls('whatsapp')} value={form.whatsapp} onChange={(e) => set('whatsapp', e.target.value)} placeholder="+20 1XX XXX XXXX" {...fieldAria('whatsapp')} />
           <FieldError field="whatsapp" />
         </div>
         <div>
           <Label htmlFor="city">Country / City *</Label>
-          <input id="city" type="text" className={inputCls('city')} value={form.city} onChange={(e) => set('city', e.target.value)} placeholder="Cairo, Egypt" />
+          <input id="city" name="city" type="text" autoComplete="address-level2" className={inputCls('city')} value={form.city} onChange={(e) => set('city', e.target.value)} placeholder="Cairo, Egypt" {...fieldAria('city')} />
           <FieldError field="city" />
+        </div>
+        {/* Honeypot — hidden from humans, bots often fill every field */}
+        <div className="hidden" aria-hidden="true">
+          <label htmlFor="website">Website</label>
+          <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" value={website} onChange={(e) => setWebsite(e.target.value)} />
         </div>
       </div>
     )
@@ -301,45 +342,50 @@ export default function RegistrationForm() {
   function renderStep2() {
     return (
       <div className="space-y-6">
-        <p className="text-gray-500 text-sm">Choose your format, batch, and software preference.</p>
+        <p className="text-gray-500 text-sm">Choose your batch and software preference.</p>
 
         <div>
-          <Label htmlFor="batch">Batch *</Label>
           {BATCHES.length === 1 ? (
-            <div className="flex items-start gap-3 border border-teal/30 bg-teal/5 rounded-lg px-4 py-3">
-              <span className="mt-0.5 inline-flex w-5 h-5 rounded-full bg-teal/15 items-center justify-center shrink-0">
-                <svg className="w-3 h-3 text-teal" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-              </span>
-              <div className="text-sm">
-                <p className="font-semibold text-navy">{BATCHES[0]}</p>
-                <p className="text-gray-500 text-xs mt-1">Only Batch 2 is currently open. You will be enrolled in this batch on acceptance.</p>
+            <>
+              <span id="batch-label" className="block text-sm font-medium text-navy mb-1.5">Batch *</span>
+              <div aria-labelledby="batch-label" className="flex items-start gap-3 border border-teal/30 bg-teal/5 rounded-lg px-4 py-3">
+                <span className="mt-0.5 inline-flex w-5 h-5 rounded-full bg-teal/15 items-center justify-center shrink-0">
+                  <svg aria-hidden="true" className="w-3 h-3 text-teal" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                </span>
+                <div className="text-sm">
+                  <p className="font-semibold text-navy">{BATCHES[0]}</p>
+                  <p className="text-gray-500 text-xs mt-1">Only Batch 2 is currently open. You will be enrolled in this batch on acceptance.</p>
+                </div>
               </div>
-              <input type="hidden" id="batch" value={form.batch} />
-            </div>
+            </>
           ) : (
-            <select id="batch" className={inputCls('batch')} value={form.batch} onChange={(e) => set('batch', e.target.value)}>
-              <option value="">Select a batch...</option>
-              {BATCHES.map((b) => (
-                <option key={b} value={b}>{b}</option>
-              ))}
-            </select>
+            <>
+              <Label htmlFor="batch">Batch *</Label>
+              <select id="batch" className={inputCls('batch')} value={form.batch} onChange={(e) => set('batch', e.target.value)} {...fieldAria('batch')}>
+                <option value="">Select a batch...</option>
+                {BATCHES.map((b) => (
+                  <option key={b} value={b}>{b}</option>
+                ))}
+              </select>
+            </>
           )}
           <FieldError field="batch" />
         </div>
 
         <div>
-          <Label htmlFor="software">Software Preference *</Label>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-2">
+          <span id="software-label" className="block text-sm font-medium text-navy mb-1.5">Software Preference *</span>
+          <div role="group" aria-labelledby="software-label" className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-2">
             {[
-              { value: 'OnyxCeph', label: 'OnyxCeph', desc: 'Cloud-based aligner planning' },
+              { value: 'OnyxCeph', label: 'OnyxCeph', desc: 'Established planning software' },
               { value: 'Titan', label: 'Titan', desc: 'Advanced dental design' },
               { value: 'No preference', label: 'No preference', desc: 'Assign me based on availability' },
             ].map((opt) => (
               <button
                 key={opt.value}
                 type="button"
+                aria-pressed={form.software === opt.value}
                 onClick={() => set('software', opt.value)}
                 className={`border rounded-lg p-4 text-left transition-all ${
                   form.software === opt.value
@@ -353,7 +399,7 @@ export default function RegistrationForm() {
             ))}
           </div>
           <FieldError field="software" />
-          <p className="text-gray-400 text-xs mt-2">
+          <p className="text-gray-500 text-xs mt-2">
             Each batch has 15 seats. Software allocation is first-come, first-served upon acceptance.
           </p>
         </div>
@@ -368,7 +414,7 @@ export default function RegistrationForm() {
 
         <div>
           <Label htmlFor="workflow">Current aligner workflow *</Label>
-          <select id="workflow" className={inputCls('workflow')} value={form.workflow} onChange={(e) => set('workflow', e.target.value)}>
+          <select id="workflow" className={inputCls('workflow')} value={form.workflow} onChange={(e) => set('workflow', e.target.value)} {...fieldAria('workflow')}>
             <option value="">Select...</option>
             <option value="In-house planning">In-house planning</option>
             <option value="Outsource to lab">Outsource to lab</option>
@@ -379,13 +425,13 @@ export default function RegistrationForm() {
 
         <div>
           <Label htmlFor="casesCompleted">Aligner cases completed end-to-end *</Label>
-          <input id="casesCompleted" type="number" min="0" className={inputCls('casesCompleted')} value={form.casesCompleted} onChange={(e) => set('casesCompleted', e.target.value)} placeholder="0" />
+          <input id="casesCompleted" type="number" min="0" className={inputCls('casesCompleted')} value={form.casesCompleted} onChange={(e) => set('casesCompleted', e.target.value)} placeholder="0" {...fieldAria('casesCompleted')} />
           <FieldError field="casesCompleted" />
         </div>
 
         <div>
           <Label htmlFor="challenge">Biggest recurring challenge *</Label>
-          <select id="challenge" className={inputCls('challenge')} value={form.challenge} onChange={(e) => set('challenge', e.target.value)}>
+          <select id="challenge" className={inputCls('challenge')} value={form.challenge} onChange={(e) => set('challenge', e.target.value)} {...fieldAria('challenge')}>
             <option value="">Select...</option>
             {CHALLENGES.map((c) => (
               <option key={c} value={c}>{c}</option>
@@ -400,8 +446,8 @@ export default function RegistrationForm() {
           { field: 'willingGraded' as const, question: 'Are you willing to be graded — pre/post assessments and case checkpoints? *' },
           { field: 'confidentiality' as const, question: 'Do you agree not to record or share cases or materials outside the cohort? *' },
         ]).map(({ field, question }) => (
-          <div key={field}>
-            <p className="text-sm font-medium text-navy mb-2">{question}</p>
+          <fieldset key={field} className="border-0 p-0 m-0">
+            <legend className="text-sm font-medium text-navy mb-2 p-0">{question}</legend>
             <div className="flex gap-4">
               {['Yes', 'No'].map((val) => (
                 <label key={val} className="flex items-center gap-2 cursor-pointer">
@@ -418,7 +464,7 @@ export default function RegistrationForm() {
               ))}
             </div>
             <FieldError field={field} />
-          </div>
+          </fieldset>
         ))}
 
         <div>
@@ -430,10 +476,11 @@ export default function RegistrationForm() {
             onChange={(e) => set('goal', e.target.value)}
             placeholder="Be specific — what will you do differently in your clinic after this program?"
             rows={4}
+            {...fieldAria('goal')}
           />
           <div className="flex justify-between mt-1">
             <FieldError field="goal" />
-            <span className={`text-xs ${form.goal.trim().length < 20 ? 'text-gray-400' : 'text-green-600'}`}>
+            <span className={`text-xs ${form.goal.trim().length < 20 ? 'text-gray-500' : 'text-green-600'}`}>
               {form.goal.trim().length}/20 min
             </span>
           </div>
@@ -441,10 +488,10 @@ export default function RegistrationForm() {
 
         {/* CV Upload */}
         <div>
-          <label className="block text-sm font-medium text-navy mb-1.5">
+          <label htmlFor="cv" className="block text-sm font-medium text-navy mb-1.5">
             Upload your CV *
           </label>
-          <div className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
+          <div className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors focus-within:ring-2 focus-within:ring-teal/50 ${
             cvError ? 'border-red-400 bg-red-50/30' : cvFile ? 'border-gold bg-gold/5' : 'border-gray-300 hover:border-gray-400'
           }`}>
             <input
@@ -452,11 +499,13 @@ export default function RegistrationForm() {
               type="file"
               accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
               onChange={handleCvUpload}
-              className="hidden"
+              className="sr-only"
+              aria-invalid={cvError ? true : undefined}
+              aria-describedby={cvError ? 'cv-error' : undefined}
             />
             {cvFile ? (
               <div>
-                <svg className="w-8 h-8 text-gold mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg aria-hidden="true" className="w-8 h-8 text-gold mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <p className="text-sm font-medium text-navy">{cvFile.name}</p>
@@ -471,7 +520,7 @@ export default function RegistrationForm() {
               </div>
             ) : (
               <label htmlFor="cv" className="cursor-pointer block">
-                <svg className="w-8 h-8 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg aria-hidden="true" className="w-8 h-8 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                 </svg>
                 <p className="text-sm text-navy font-medium">Click to upload your CV</p>
@@ -479,7 +528,7 @@ export default function RegistrationForm() {
               </label>
             )}
           </div>
-          {cvError && <p className="text-red-600 text-sm mt-1 field-error">{cvError}</p>}
+          {cvError && <p id="cv-error" role="alert" className="text-red-600 text-sm mt-1 field-error">{cvError}</p>}
         </div>
       </div>
     )
@@ -532,7 +581,7 @@ export default function RegistrationForm() {
               <button
                 type="button"
                 onClick={() => setStep(sec.editStep)}
-                className="text-gold hover:text-gold-dark text-sm font-medium"
+                className="text-gold-dark hover:text-navy text-sm font-medium"
               >
                 Edit
               </button>
@@ -557,14 +606,15 @@ export default function RegistrationForm() {
               className="mt-1 w-4 h-4 accent-gold"
             />
             <span className="text-sm text-gray-700">
-              I confirm I am ready for the 40,000 EGP investment. I understand payment is made via bank transfer or Instapay after acceptance. A 50% deposit (20,000 EGP) secures my seat, with the remaining balance due at Session 1. I understand that refunds are available up to 10 days before the first session; after that, fees are non-refundable.
+              I confirm I am ready for the 40,000 EGP investment. I understand payment is made via bank transfer or InstaPay after acceptance. A 50% deposit (20,000 EGP) secures my seat, with the remaining balance due at Session 1. I understand that refunds are available up to 10 days before the first session; after that, fees are non-refundable. I agree to the processing of my data as described in the{' '}
+              <a href="/privacy" target="_blank" className="underline text-navy hover:text-teal-dark">Privacy Policy</a>.
             </span>
           </label>
           <FieldError field="investmentConfirmed" />
         </div>
 
         {submitError && (
-          <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 text-sm">
+          <div role="alert" className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 text-sm">
             {submitError}
           </div>
         )}
@@ -582,7 +632,7 @@ export default function RegistrationForm() {
             const active = stepNum === step
             const completed = stepNum < step
             return (
-              <div key={label} className="flex flex-col items-center flex-1">
+              <div key={label} className="flex flex-col items-center flex-1" aria-current={active ? 'step' : undefined}>
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-colors ${
                     active
@@ -593,14 +643,14 @@ export default function RegistrationForm() {
                   }`}
                 >
                   {completed ? (
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg aria-hidden="true" className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
                     </svg>
                   ) : (
                     stepNum
                   )}
                 </div>
-                <span className={`text-xs mt-1.5 hidden sm:block ${active ? 'text-gold font-semibold' : 'text-gray-400'}`}>
+                <span className={`text-xs mt-1.5 hidden sm:block ${active ? 'text-gold-dark font-semibold' : 'text-gray-500'}`}>
                   {label}
                 </span>
               </div>
@@ -608,7 +658,15 @@ export default function RegistrationForm() {
           })}
         </div>
         {/* Progress line */}
-        <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
+        <div
+          className="h-1 bg-gray-200 rounded-full overflow-hidden"
+          role="progressbar"
+          aria-label="Application progress"
+          aria-valuemin={1}
+          aria-valuemax={STEPS.length}
+          aria-valuenow={step}
+          aria-valuetext={`Step ${step} of ${STEPS.length}: ${STEPS[step - 1]}`}
+        >
           <div
             className="h-full bg-navy rounded-full transition-all duration-500"
             style={{ width: `${((step - 1) / (STEPS.length - 1)) * 100}%` }}
@@ -617,8 +675,16 @@ export default function RegistrationForm() {
       </div>
 
       {/* Step Content */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 step-transition">
-        <h2 className="text-xl font-bold text-navy mb-6">
+      <form
+        noValidate
+        onSubmit={(e) => {
+          e.preventDefault()
+          if (step < 4) next()
+          else submit()
+        }}
+        className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 step-transition"
+      >
+        <h2 ref={headingRef} tabIndex={-1} className="text-xl font-bold text-navy mb-6 outline-none">
           Step {step}: {STEPS[step - 1]}
         </h2>
 
@@ -643,22 +709,20 @@ export default function RegistrationForm() {
 
           {step < 4 ? (
             <button
-              type="button"
-              onClick={next}
+              type="submit"
               className="bg-gold hover:bg-gold-dark text-white font-semibold px-6 py-2.5 rounded-lg text-sm transition-colors flex items-center gap-1"
             >
               Next <span aria-hidden="true">&rarr;</span>
             </button>
           ) : (
             <button
-              type="button"
-              onClick={submit}
+              type="submit"
               disabled={submitting}
               className="bg-gold hover:bg-gold-dark disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold px-8 py-2.5 rounded-lg text-sm transition-colors flex items-center gap-2"
             >
               {submitting ? (
                 <>
-                  <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                  <svg aria-hidden="true" className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                   </svg>
@@ -670,7 +734,7 @@ export default function RegistrationForm() {
             </button>
           )}
         </div>
-      </div>
+      </form>
     </div>
   )
 }

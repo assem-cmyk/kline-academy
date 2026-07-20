@@ -6,7 +6,7 @@ const benefits = [
       </svg>
     ),
     title: 'Exclusive Hiring Pipeline',
-    desc: "K Line Europe GmbH hires 1–2 top designers exclusively from Academy graduates per batch. The only direct pathway in.",
+    desc: "K Line Europe GmbH hires 1–2 top designers exclusively from Academy graduates per batch — your direct route onto the team.",
   },
   {
     icon: (
@@ -23,7 +23,7 @@ const benefits = [
         <path strokeLinecap="round" strokeLinejoin="round" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8" />
       </svg>
     ),
-    title: '6-Month Alumni Webinar',
+    title: '6-Month Alumni Webinars',
     desc: 'Monthly live case-discussion webinars with faculty after graduation. Complex cases, troubleshooting, peer review.',
   },
   {
@@ -42,7 +42,7 @@ export default function Benefits() {
     <section id="benefits" className="relative py-24 md:py-32 bg-slate-50/40 overflow-hidden">
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <span className="inline-block text-xs font-semibold tracking-[0.2em] text-teal uppercase mb-3">
+          <span className="inline-block text-xs font-semibold tracking-[0.2em] text-teal-dark uppercase mb-3">
             Graduate Benefits
           </span>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-navy max-w-2xl mx-auto leading-tight">

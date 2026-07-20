@@ -34,6 +34,8 @@ export default function BusinessModule() {
                 <img
                   src="/faculty/assem-k.jpg"
                   alt="Dr. Assem Youssef, CEO of K Line Middle East"
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover"
                   style={{ objectPosition: '50% top' }}
                 />
@@ -50,7 +52,7 @@ export default function BusinessModule() {
               From the CEO
             </span>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-5 leading-tight">
-              The business of aligners — <span className="gradient-text">not just the planning.</span>
+              The business of aligners — <span className="gradient-text-bright">not just the planning.</span>
             </h2>
             <p className="text-white/70 text-base md:text-lg leading-relaxed mb-8">
               Most aligner courses stop at the software. <strong className="text-white font-semibold">Dr. Assem Youssef</strong>,
@@ -63,7 +65,7 @@ export default function BusinessModule() {
               {highlights.map((h) => (
                 <li key={h.title} className="flex gap-4">
                   <span className="shrink-0 w-8 h-8 rounded-lg bg-teal/15 border border-teal/30 flex items-center justify-center mt-0.5">
-                    <svg className="w-4 h-4 text-teal" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                    <svg aria-hidden="true" className="w-4 h-4 text-teal" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
                   </span>
@@ -76,7 +78,7 @@ export default function BusinessModule() {
             </ul>
 
             <p className="text-white/50 text-sm italic">
-              Included in every batch — one full session dedicated to the business side.
+              Included in every batch — delivered as part of the final session.
             </p>
           </div>
         </div>

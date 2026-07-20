@@ -1,9 +1,26 @@
 import { NextResponse } from 'next/server'
 import { Resend } from 'resend'
 
-function getResend() {
-  return new Resend(process.env.RESEND_API_KEY)
-}
+const ADMIN_EMAIL = 'assem@clearxaligners.com'
+const FROM = 'K Line Academy <noreply@klineacademy.org>'
+
+/* ── Server-side allowlists (must mirror the form) ── */
+const BATCHES = [
+  'Offline — Batch 2 (Cairo) · Sep 18 – Oct 10, 2026 · Fri & Sat · 4 weekends',
+]
+const SOFTWARE = ['OnyxCeph', 'Titan', 'No preference']
+const WORKFLOWS = ['In-house planning', 'Outsource to lab', 'Mixed']
+const CHALLENGES = [
+  'Tracking issues',
+  'Staging & sequencing',
+  'Anchorage control',
+  'IPR planning',
+  'Attachment design',
+  'Case selection',
+  'All of the above',
+  'Other',
+]
+const YES_NO = ['Yes', 'No']
 
 interface CvAttachment {
   filename: string
@@ -26,29 +43,77 @@ interface FormPayload {
   confidentiality: string
   goal: string
   investmentConfirmed: boolean
+  website?: string // honeypot — must be empty
   cv?: CvAttachment
+}
+
+/* ── Helpers ── */
+function escapeHtml(value: unknown): string {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
 }
 
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 }
 
+function isValidPhone(val: string) {
+  return /^\+?[0-9]{10,15}$/.test(val.replace(/[\s\-()]/g, ''))
+}
+
+function sanitizeFilename(name: string): string {
+  const cleaned = name.replace(/[^a-zA-Z0-9._\- ]/g, '_').slice(0, 100)
+  return cleaned || 'cv.pdf'
+}
+
+/* ── Simple in-memory rate limit: max 5 submissions per IP per 10 minutes ── */
+const RATE_WINDOW_MS = 10 * 60 * 1000
+const RATE_MAX = 5
+const rateMap = new Map<string, number[]>()
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now()
+  const hits = (rateMap.get(ip) ?? []).filter((t) => now - t < RATE_WINDOW_MS)
+  if (hits.length >= RATE_MAX) {
+    rateMap.set(ip, hits)
+    return true
+  }
+  hits.push(now)
+  rateMap.set(ip, hits)
+  // Opportunistic cleanup so the map never grows unbounded
+  if (rateMap.size > 1000) {
+    rateMap.forEach((v, k) => {
+      if (v.every((t) => now - t >= RATE_WINDOW_MS)) rateMap.delete(k)
+    })
+  }
+  return false
+}
+
 function validate(data: FormPayload): string | null {
-  if (!data.fullName?.trim()) return 'Full name is required'
-  if (!data.email?.trim() || !isValidEmail(data.email)) return 'Valid email is required'
-  if (!data.whatsapp?.trim() || data.whatsapp.replace(/[\s\-()]/g, '').length < 10)
+  if (!data.fullName?.trim() || data.fullName.length > 100) return 'Full name is required'
+  if (!data.email?.trim() || data.email.length > 200 || !isValidEmail(data.email.trim()))
+    return 'Valid email is required'
+  if (!data.whatsapp?.trim() || data.whatsapp.length > 30 || !isValidPhone(data.whatsapp))
     return 'Valid WhatsApp number is required'
-  if (!data.city?.trim()) return 'City is required'
-  if (!data.batch) return 'Batch selection is required'
-  if (!data.software) return 'Software preference is required'
-  if (!data.workflow) return 'Workflow is required'
-  if (data.casesCompleted === '' || parseInt(data.casesCompleted) < 0) return 'Cases completed is required'
-  if (!data.challenge) return 'Challenge is required'
-  if (!data.commitHours) return 'Commitment answer is required'
-  if (!data.willingGraded) return 'Grading answer is required'
+  if (!data.city?.trim() || data.city.length > 100) return 'City is required'
+  if (!BATCHES.includes(data.batch)) return 'Batch selection is required'
+  if (!SOFTWARE.includes(data.software)) return 'Software preference is required'
+  if (!WORKFLOWS.includes(data.workflow)) return 'Workflow is required'
+  const cases = Number(data.casesCompleted)
+  if (data.casesCompleted === '' || !Number.isInteger(cases) || cases < 0 || cases > 10000)
+    return 'Cases completed is required'
+  if (!CHALLENGES.includes(data.challenge)) return 'Challenge is required'
+  if (!YES_NO.includes(data.commitHours)) return 'Commitment answer is required'
+  if (!YES_NO.includes(data.willingGraded)) return 'Grading answer is required'
   if (data.confidentiality !== 'Yes') return 'Confidentiality agreement is required'
-  if (!data.goal?.trim() || data.goal.trim().length < 20) return 'Goal must be at least 20 characters'
+  if (!data.goal?.trim() || data.goal.trim().length < 20 || data.goal.length > 2000)
+    return 'Goal must be 20–2000 characters'
   if (!data.investmentConfirmed) return 'Investment confirmation is required'
+  if (!data.cv?.content) return 'CV upload is required'
   return null
 }
 
@@ -60,27 +125,25 @@ function cairoTimestamp() {
   })
 }
 
+/* ── Brand palette (matches the site) ── */
+const NAVY = '#0B132B'
+const TEAL = '#06B0AE'
+
 const socialFooterHtml = `
-  <div style="background:#0A1628;padding:24px 32px;border-radius:0 0 12px 12px;text-align:center;margin-top:0">
-    <div style="margin-bottom:16px">
-      <a href="https://www.kline-europe.com" target="_blank" rel="noopener noreferrer" style="display:inline-block;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);text-decoration:none;line-height:36px;text-align:center;margin:0 4px" title="Website">
-        <img src="https://img.icons8.com/ios-filled/24/ffffff/globe.png" width="18" height="18" alt="Website" style="vertical-align:middle"/>
-      </a>
-      <a href="https://www.facebook.com/klineurope" target="_blank" rel="noopener noreferrer" style="display:inline-block;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);text-decoration:none;line-height:36px;text-align:center;margin:0 4px" title="Facebook">
-        <img src="https://img.icons8.com/ios-filled/24/ffffff/facebook-new.png" width="18" height="18" alt="Facebook" style="vertical-align:middle"/>
-      </a>
-      <a href="https://www.instagram.com/kline_europe" target="_blank" rel="noopener noreferrer" style="display:inline-block;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);text-decoration:none;line-height:36px;text-align:center;margin:0 4px" title="Instagram">
-        <img src="https://img.icons8.com/ios-filled/24/ffffff/instagram-new.png" width="18" height="18" alt="Instagram" style="vertical-align:middle"/>
-      </a>
-      <a href="https://www.linkedin.com/company/k-line-europe-gmbh/" target="_blank" rel="noopener noreferrer" style="display:inline-block;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);text-decoration:none;line-height:36px;text-align:center;margin:0 4px" title="LinkedIn">
-        <img src="https://img.icons8.com/ios-filled/24/ffffff/linkedin.png" width="18" height="18" alt="LinkedIn" style="vertical-align:middle"/>
-      </a>
-      <a href="https://wa.me/201227624659" target="_blank" rel="noopener noreferrer" style="display:inline-block;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);text-decoration:none;line-height:36px;text-align:center;margin:0 4px" title="WhatsApp">
-        <img src="https://img.icons8.com/ios-filled/24/ffffff/whatsapp.png" width="18" height="18" alt="WhatsApp" style="vertical-align:middle"/>
-      </a>
-    </div>
+  <div style="background:${NAVY};padding:24px 32px;border-radius:0 0 12px 12px;text-align:center;margin-top:0">
+    <p style="font-size:13px;margin:0 0 10px">
+      <a href="https://www.kline-europe.com" target="_blank" rel="noopener noreferrer" style="color:#ffffff;text-decoration:none;margin:0 8px">Website</a>
+      <span style="color:rgba(255,255,255,0.3)">·</span>
+      <a href="https://www.facebook.com/klineurope" target="_blank" rel="noopener noreferrer" style="color:#ffffff;text-decoration:none;margin:0 8px">Facebook</a>
+      <span style="color:rgba(255,255,255,0.3)">·</span>
+      <a href="https://www.instagram.com/kline_europe" target="_blank" rel="noopener noreferrer" style="color:#ffffff;text-decoration:none;margin:0 8px">Instagram</a>
+      <span style="color:rgba(255,255,255,0.3)">·</span>
+      <a href="https://www.linkedin.com/company/k-line-europe-gmbh/" target="_blank" rel="noopener noreferrer" style="color:#ffffff;text-decoration:none;margin:0 8px">LinkedIn</a>
+      <span style="color:rgba(255,255,255,0.3)">·</span>
+      <a href="https://wa.me/201227624659" target="_blank" rel="noopener noreferrer" style="color:#ffffff;text-decoration:none;margin:0 8px">WhatsApp</a>
+    </p>
     <p style="font-size:12px;color:rgba(255,255,255,0.6);margin:0">
-      <a href="https://www.kline-europe.com" target="_blank" rel="noopener noreferrer" style="color:#D4A843;text-decoration:none">kline-europe.com</a>
+      <a href="https://www.kline-europe.com" target="_blank" rel="noopener noreferrer" style="color:${TEAL};text-decoration:none">kline-europe.com</a>
       &nbsp;&mdash;&nbsp; &copy; ${new Date().getFullYear()} K Line Academy
     </p>
     <p style="font-size:11px;color:rgba(255,255,255,0.4);margin:4px 0 0">A K Line Europe GmbH initiative</p>
@@ -110,21 +173,21 @@ function adminEmailHtml(d: FormPayload): string {
   const tableRows = rows
     .map(
       ([label, value]) =>
-        `<tr><td style="padding:10px 16px;border-bottom:1px solid #eee;font-weight:600;color:#0A1628;width:200px;vertical-align:top;font-size:14px">${label}</td><td style="padding:10px 16px;border-bottom:1px solid #eee;color:#333;font-size:14px">${value}</td></tr>`
+        `<tr><td style="padding:10px 16px;border-bottom:1px solid #eee;font-weight:600;color:${NAVY};width:200px;vertical-align:top;font-size:14px">${escapeHtml(label)}</td><td style="padding:10px 16px;border-bottom:1px solid #eee;color:#333;font-size:14px">${escapeHtml(value)}</td></tr>`
     )
     .join('')
 
   return `
-    <div style="font-family:Inter,Arial,sans-serif;max-width:640px;margin:0 auto">
-      <div style="background:#0A1628;padding:24px 32px;border-radius:12px 12px 0 0">
-        <h1 style="color:#fff;font-size:20px;margin:0">K Line Academy<span style="color:#D4A843">.</span></h1>
-        <p style="color:#D4A843;font-size:14px;margin:4px 0 0">New Application</p>
+    <div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto">
+      <div style="background:${NAVY};padding:24px 32px;border-radius:12px 12px 0 0">
+        <h1 style="color:#fff;font-size:20px;margin:0">K Line Academy<span style="color:${TEAL}">.</span></h1>
+        <p style="color:${TEAL};font-size:14px;margin:4px 0 0">New Application</p>
       </div>
       <div style="background:#fff;padding:0;border:1px solid #e5e5e5;border-top:none">
         <table style="width:100%;border-collapse:collapse">${tableRows}</table>
       </div>
       <p style="color:#888;font-size:12px;margin:12px 0;padding:0 16px">
-        Reply to this email or WhatsApp <strong>${d.whatsapp}</strong> to follow up.
+        Reply to this email or WhatsApp <strong>${escapeHtml(d.whatsapp)}</strong> to follow up.
       </p>
       ${socialFooterHtml}
     </div>
@@ -132,34 +195,34 @@ function adminEmailHtml(d: FormPayload): string {
 }
 
 function applicantEmailHtml(d: FormPayload): string {
-  const firstName = d.fullName.split(' ')[0]
+  const firstName = escapeHtml(d.fullName.trim().split(' ')[0])
   return `
-    <div style="font-family:Inter,Arial,sans-serif;max-width:640px;margin:0 auto">
-      <div style="background:#0A1628;padding:24px 32px;border-radius:12px 12px 0 0">
-        <h1 style="color:#fff;font-size:20px;margin:0">K Line Academy<span style="color:#D4A843">.</span></h1>
+    <div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto">
+      <div style="background:${NAVY};padding:24px 32px;border-radius:12px 12px 0 0">
+        <h1 style="color:#fff;font-size:20px;margin:0">K Line Academy<span style="color:${TEAL}">.</span></h1>
       </div>
       <div style="background:#fff;padding:32px;border:1px solid #e5e5e5;border-top:none;border-radius:0 0 12px 12px">
-        <p style="font-size:16px;color:#1A1A2E;margin:0 0 16px">Hi ${firstName},</p>
+        <p style="font-size:16px;color:${NAVY};margin:0 0 16px">Hi ${firstName},</p>
         <p style="font-size:14px;color:#333;line-height:1.7;margin:0 0 16px">
-          We've received your application for K Line Academy — <strong>${d.batch}</strong>.
+          We've received your application for K Line Academy — <strong>${escapeHtml(d.batch)}</strong>.
         </p>
         <p style="font-size:14px;color:#333;line-height:1.7;margin:0 0 8px"><strong>Here's what happens next:</strong></p>
         <ol style="font-size:14px;color:#333;line-height:2;padding-left:20px;margin:0 0 24px">
-          <li>We'll review your application within 48 hours</li>
-          <li>If accepted, we'll contact you via WhatsApp or email</li>
+          <li>We review every application within 48 hours</li>
+          <li>We'll contact you with a decision via WhatsApp or email</li>
           <li>A 50% deposit (20,000 EGP) confirms your seat</li>
-          <li>Full balance (20,000 EGP) is due at Session 1</li>
+          <li>The remaining balance (20,000 EGP) is due at Session 1</li>
         </ol>
-        <p style="font-size:13px;color:#666;line-height:1.6;margin:0 0 16px;padding:12px 16px;background:#fdf6e3;border-left:3px solid #D4A843;border-radius:4px">
-          <strong style="color:#1A1A2E">Refund Policy:</strong> Full refund available up to 10 days before the first session. After that, fees are non-refundable.
+        <p style="font-size:13px;color:#666;line-height:1.6;margin:0 0 16px;padding:12px 16px;background:#e9f8f8;border-left:3px solid ${TEAL};border-radius:4px">
+          <strong style="color:${NAVY}">Refund Policy:</strong> Full refund available up to 10 days before the first session. After that, fees are non-refundable.
         </p>
         <p style="font-size:14px;color:#333;line-height:1.7;margin:0 0 24px">
-          Questions? Reply to this email or message us on WhatsApp.
+          Questions? Reply to this email or message us on <a href="https://wa.me/201227624659" style="color:${TEAL}">WhatsApp</a>.
         </p>
         <div style="border-top:1px solid #eee;padding-top:20px;margin-top:16px">
-          <p style="font-size:14px;color:#1A1A2E;margin:0;font-weight:600">— Assem K</p>
+          <p style="font-size:14px;color:${NAVY};margin:0;font-weight:600">— Dr. Assem Youssef</p>
           <p style="font-size:13px;color:#888;margin:4px 0 0">CEO, K Line Middle East</p>
-          <p style="font-size:13px;color:#888;margin:2px 0 0">assem@clearxaligners.com</p>
+          <p style="font-size:13px;color:#888;margin:2px 0 0">${ADMIN_EMAIL}</p>
         </div>
       </div>
       ${socialFooterHtml}
@@ -169,20 +232,43 @@ function applicantEmailHtml(d: FormPayload): string {
 
 export async function POST(request: Request) {
   try {
+    // Fail fast and loud when the email service is not configured —
+    // otherwise a misconfigured deploy silently loses applications.
+    if (!process.env.RESEND_API_KEY) {
+      console.error('[submit] RESEND_API_KEY is not set — applications CANNOT be delivered')
+      return NextResponse.json(
+        { success: false, error: 'Email service is not configured. Please contact us on WhatsApp.' },
+        { status: 500 }
+      )
+    }
+
+    const ip = (request.headers.get('x-forwarded-for') ?? 'unknown').split(',')[0].trim()
+    if (isRateLimited(ip)) {
+      return NextResponse.json(
+        { success: false, error: 'Too many requests. Please try again in a few minutes.' },
+        { status: 429 }
+      )
+    }
+
     const data: FormPayload = await request.json()
+
+    // Honeypot: real users never fill this field. Pretend success so bots don't adapt.
+    if (data.website) {
+      return NextResponse.json({ success: true })
+    }
 
     const validationError = validate(data)
     if (validationError) {
       return NextResponse.json({ success: false, error: validationError }, { status: 400 })
     }
 
-    const resend = getResend()
+    const resend = new Resend(process.env.RESEND_API_KEY)
 
-    // Send admin notification email (with CV attached if provided)
+    // Send admin notification email (with CV attached)
     const adminEmailParams: Parameters<typeof resend.emails.send>[0] = {
-      from: 'K Line Academy <noreply@klineacademy.org>',
-      to: 'assem@clearxaligners.com',
-      subject: `New Application — ${data.fullName} · ${data.batch} · ${data.software}`,
+      from: FROM,
+      to: ADMIN_EMAIL,
+      subject: `New Application — ${data.fullName.slice(0, 60)} · ${data.software}`,
       html: adminEmailHtml(data),
       replyTo: data.email,
     }
@@ -200,7 +286,7 @@ export async function POST(request: Request) {
         'application/msword',
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
       ]
-      if (data.cv.contentType && !allowedTypes.includes(data.cv.contentType)) {
+      if (!data.cv.contentType || !allowedTypes.includes(data.cv.contentType)) {
         return NextResponse.json(
           { success: false, error: 'CV must be PDF or Word.' },
           { status: 400 }
@@ -208,8 +294,9 @@ export async function POST(request: Request) {
       }
       adminEmailParams.attachments = [
         {
-          filename: data.cv.filename,
+          filename: sanitizeFilename(data.cv.filename),
           content: data.cv.content, // base64
+          contentType: data.cv.contentType,
         },
       ]
     }
@@ -219,7 +306,6 @@ export async function POST(request: Request) {
 
     try {
       const adminResult = await resend.emails.send(adminEmailParams)
-      console.log('[submit] Admin email result:', JSON.stringify(adminResult))
       adminOk = !adminResult.error
       if (adminResult.error) {
         console.error('[submit] Admin email error:', adminResult.error)
@@ -230,12 +316,12 @@ export async function POST(request: Request) {
 
     try {
       const applicantResult = await resend.emails.send({
-        from: 'K Line Academy <noreply@klineacademy.org>',
+        from: FROM,
         to: data.email,
-        subject: 'Your K Line Academy Application — Received ✓',
+        replyTo: ADMIN_EMAIL,
+        subject: 'Your K Line Academy Application — Received',
         html: applicantEmailHtml(data),
       })
-      console.log('[submit] Applicant email result:', JSON.stringify(applicantResult))
       applicantOk = !applicantResult.error
       if (applicantResult.error) {
         console.error('[submit] Applicant email error:', applicantResult.error)
@@ -244,13 +330,14 @@ export async function POST(request: Request) {
       console.error('[submit] Applicant email exception:', e)
     }
 
-    // As long as admin received the application, treat as success
-    if (adminOk || applicantOk) {
+    // Success ONLY if the application actually reached the admissions inbox.
+    // The applicant confirmation is best-effort.
+    if (adminOk) {
       return NextResponse.json({ success: true, adminOk, applicantOk })
     }
 
     return NextResponse.json(
-      { success: false, error: 'Email delivery failed. Please contact us directly.' },
+      { success: false, error: 'Email delivery failed. Please contact us directly on WhatsApp.' },
       { status: 500 }
     )
   } catch (error) {

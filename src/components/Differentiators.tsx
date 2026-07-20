@@ -7,7 +7,7 @@ const items = [
     ),
     stat: '85%',
     title: 'Hands-On Learning',
-    desc: 'Not lectures. Real case planning from Day 1, with live feedback from K Line Europe specialists.',
+    desc: 'Roughly 85% of course hours are spent planning real cases — not watching slides — with live feedback from K Line Europe specialists.',
   },
   {
     icon: (
@@ -42,7 +42,7 @@ export default function Differentiators() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section header */}
         <div className="text-center mb-16">
-          <span className="inline-block text-xs font-semibold tracking-[0.2em] text-teal uppercase mb-3">
+          <span className="inline-block text-xs font-semibold tracking-[0.2em] text-teal-dark uppercase mb-3">
             Why K Line Academy
           </span>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-navy max-w-2xl mx-auto leading-tight">

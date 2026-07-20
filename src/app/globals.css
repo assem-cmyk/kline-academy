@@ -2,22 +2,34 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap');
-
 html {
   scroll-behavior: smooth;
 }
 
 body {
-  font-family: 'Familjen Grotesk', 'Inter', system-ui, sans-serif;
+  font-family: var(--font-familjen), system-ui, sans-serif;
   color: #0B132B;
   -webkit-font-smoothing: antialiased;
   letter-spacing: -0.01em;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Familjen Grotesk', 'Inter', system-ui, sans-serif;
+  font-family: var(--font-familjen), system-ui, sans-serif;
   letter-spacing: -0.02em;
+}
+
+/* ===== REDUCED MOTION ===== */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* ===== HERO ANIMATED GLOW ===== */
@@ -45,21 +57,6 @@ h1, h2, h3, h4, h5, h6 {
 
 .hero-orb-blue {
   background: radial-gradient(circle, #1C2541 0%, transparent 70%);
-}
-
-/* ===== GLASS CARDS ===== */
-.glass-card {
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(6, 176, 174, 0.1);
-}
-
-.glass-card-dark {
-  background: rgba(28, 37, 65, 0.5);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(6, 176, 174, 0.15);
 }
 
 /* ===== PREMIUM BUTTON ===== */
@@ -92,7 +89,16 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ===== GRADIENT TEXT ===== */
+/* On light backgrounds — dark enough to stay legible (>=3:1 for large text) */
 .gradient-text {
+  background: linear-gradient(135deg, #037371 0%, #059A98 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* On navy backgrounds — the original bright glow variant */
+.gradient-text-bright {
   background: linear-gradient(135deg, #06B0AE 0%, #6FFFE9 100%);
   -webkit-background-clip: text;
   background-clip: text;
@@ -109,18 +115,6 @@ input:focus, select:focus, textarea:focus {
 /* ===== STEP TRANSITION ===== */
 .step-transition {
   transition: all 0.3s ease-in-out;
-}
-
-/* ===== SCROLL-IN ANIMATIONS ===== */
-.animate-on-scroll {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
-}
-
-.animate-on-scroll.in-view {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 /* ===== SUBTLE NOISE TEXTURE ===== */

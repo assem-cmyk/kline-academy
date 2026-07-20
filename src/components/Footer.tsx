@@ -58,7 +58,7 @@ export default function Footer() {
         {/* Logo lockup */}
         <div className="flex items-center justify-center gap-3 mb-5">
           <div className="bg-white rounded-lg px-3 py-2">
-            <img src="/brand/kline-logo.jpg" alt="K Line" className="h-7 w-auto object-contain" />
+            <img src="/brand/kline-logo.jpg" alt="K Line" loading="lazy" decoding="async" className="h-7 w-auto object-contain" />
           </div>
           <div className="h-7 w-px bg-white/20" />
           <span className="text-lg font-semibold text-white tracking-tight">
@@ -92,7 +92,12 @@ export default function Footer() {
         </a>
 
         <div className="mt-10 pt-8 border-t border-white/10">
-          <p className="text-slate-500 text-xs">
+          <p className="text-slate-400 text-xs mb-3">
+            <a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
+            {' '}&middot;{' '}
+            <a href="/terms" className="hover:text-white transition-colors">Terms &amp; Refund Policy</a>
+          </p>
+          <p className="text-slate-400 text-xs">
             <a
               href="https://www.kline-europe.com"
               target="_blank"

@@ -75,6 +75,8 @@ function FacultyPhoto({
         <img
           src={photo}
           alt={name}
+          loading="lazy"
+          decoding="async"
           className="absolute inset-0 w-full h-full object-cover"
           style={{ objectPosition, transform: `scale(${scale})` }}
           onError={(e) => {
@@ -95,7 +97,7 @@ export default function Faculty() {
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <span className="inline-block text-xs font-semibold tracking-[0.2em] text-teal uppercase mb-3">
+          <span className="inline-block text-xs font-semibold tracking-[0.2em] text-teal-dark uppercase mb-3">
             Faculty
           </span>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-navy mb-4">
@@ -116,7 +118,7 @@ export default function Faculty() {
               <h3 className="text-lg font-bold text-navy mb-1">{f.name}</h3>
               {f.title && <p className="text-sm text-navy/60 mb-1">{f.title}</p>}
               {f.institution && (
-                <p className="text-sm text-navy/50 mb-3 italic">{f.institution}</p>
+                <p className="text-sm text-navy/70 mb-3 italic">{f.institution}</p>
               )}
               <span className="inline-block bg-teal/10 text-teal-dark text-[11px] font-semibold uppercase tracking-wider px-3 py-1.5 rounded-full mt-3 border border-teal/20">
                 {f.badge}

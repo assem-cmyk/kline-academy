@@ -9,14 +9,16 @@ export default function Header() {
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
     onScroll()
-    window.addEventListener('scroll', onScroll)
+    window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
   const navLinks = [
-    { label: 'Program', href: '#program' },
-    { label: 'Faculty', href: '#faculty' },
-    { label: 'Benefits', href: '#benefits' },
+    { label: 'Program', href: '/#program' },
+    { label: 'Faculty', href: '/#faculty' },
+    { label: 'Benefits', href: '/#benefits' },
+    { label: 'Investment', href: '/#pricing' },
+    { label: 'FAQ', href: '/#faq' },
   ]
 
   return (
@@ -65,7 +67,9 @@ export default function Header() {
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
             className="md:hidden p-2"
-            aria-label="Toggle menu"
+            aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-menu"
           >
             <div className="w-6 h-5 flex flex-col justify-between">
               <span className={`block h-0.5 bg-navy transition-transform ${mobileOpen ? 'rotate-45 translate-y-2' : ''}`} />
@@ -77,7 +81,7 @@ export default function Header() {
 
         {/* Mobile Menu */}
         {mobileOpen && (
-          <div className="md:hidden pb-4 border-t border-navy-700/10 mt-2 pt-4">
+          <div id="mobile-menu" className="md:hidden pb-4 border-t border-navy-700/10 mt-2 pt-4">
             <nav className="flex flex-col gap-4">
               {navLinks.map((link) => (
                 <a
