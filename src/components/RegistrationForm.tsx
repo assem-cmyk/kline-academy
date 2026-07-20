@@ -43,7 +43,7 @@ const STORAGE_KEY = 'kline-academy-form'
 const STEPS = ['Personal Info', 'Batch & Software', 'Clinical Background', 'Review & Submit']
 
 const BATCHES = [
-  'Offline — Batch 1 (Cairo) · July 4 – 26, 2026 · Sat & Sun · 4 weekends',
+  'Offline — Batch 2 (Cairo) · Sep 18 – Oct 10, 2026 · Fri & Sat · 4 weekends',
 ]
 
 const CHALLENGES = [
@@ -314,7 +314,7 @@ export default function RegistrationForm() {
               </span>
               <div className="text-sm">
                 <p className="font-semibold text-navy">{BATCHES[0]}</p>
-                <p className="text-gray-500 text-xs mt-1">Only the first batch is currently open. You will be enrolled in this batch on acceptance.</p>
+                <p className="text-gray-500 text-xs mt-1">Only Batch 2 is currently open. You will be enrolled in this batch on acceptance.</p>
               </div>
               <input type="hidden" id="batch" value={form.batch} />
             </div>
@@ -333,8 +333,8 @@ export default function RegistrationForm() {
           <Label htmlFor="software">Software Preference *</Label>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-2">
             {[
-              { value: 'OnyxCeph', label: 'OnyxCeph', desc: 'Cloud-based · 6 seats per batch' },
-              { value: 'Titan', label: 'Titan', desc: 'Advanced design · 6 seats per batch' },
+              { value: 'OnyxCeph', label: 'OnyxCeph', desc: 'Cloud-based · 8 seats per batch' },
+              { value: 'Titan', label: 'Titan', desc: 'Advanced design · 7 seats per batch' },
               { value: 'No preference', label: 'No preference', desc: 'Assign me based on availability' },
             ].map((opt) => (
               <button
@@ -354,7 +354,7 @@ export default function RegistrationForm() {
           </div>
           <FieldError field="software" />
           <p className="text-gray-400 text-xs mt-2">
-            Each batch has 6 seats per software. Allocation is first-come, first-served upon acceptance.
+            Each batch has 15 seats — 8 on OnyxCeph, 7 on Titan. Allocation is first-come, first-served upon acceptance.
           </p>
         </div>
       </div>

@@ -18,7 +18,7 @@ export default function Hero() {
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-teal/10 border border-teal/20 backdrop-blur-sm mb-8 animate-fade-in">
           <span className="w-2 h-2 rounded-full bg-teal animate-subtle-pulse" />
           <span className="text-xs font-medium tracking-wide text-teal-light uppercase">
-            Applications Open · First Batch
+            Applications Open · Batch 2
           </span>
         </div>
 
@@ -61,7 +61,7 @@ export default function Hero() {
             <svg className="w-4 h-4 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
-            July 4 – 26, 2026
+            Sep 18 – Oct 10, 2026
           </div>
           <div className="w-1 h-1 rounded-full bg-slate-600 hidden md:block" />
           <div className="flex items-center gap-2">
@@ -76,7 +76,7 @@ export default function Hero() {
             <svg className="w-4 h-4 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
-            12 Seats Only
+            15 Seats Only
           </div>
         </div>
       </div>

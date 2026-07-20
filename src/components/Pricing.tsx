@@ -1,5 +1,5 @@
 const included = [
-  '8 sessions (53 hours total)',
+  '8 sessions (48 hours total)',
   '15 real case assignments with answer keys',
   'OnyxCeph or Titan software access',
   'Printed session materials',
@@ -34,7 +34,7 @@ export default function Pricing() {
 
           <div className="relative">
             <p className="text-teal text-xs font-semibold tracking-[0.2em] uppercase mb-3">
-              First Batch · Cairo
+              Batch 2 · Cairo
             </p>
             <div className="flex items-baseline justify-center gap-4 mb-2">
               <span className="text-2xl md:text-3xl font-semibold text-slate-500 line-through decoration-2">
@@ -46,10 +46,10 @@ export default function Pricing() {
               </p>
             </div>
             <span className="inline-block bg-teal/15 text-teal-light text-[11px] font-semibold uppercase tracking-wider px-3 py-1.5 rounded-full border border-teal/30 mb-3">
-              First Batch Discount · Save $250
+              Early Bird Discount · Save $250
             </span>
             <p className="text-slate-400 text-sm mb-10">
-              4 weekends · 53 hours · 15 cases
+              4 weekends · 48 hours · 15 cases
             </p>
 
             <div className="text-left max-w-md mx-auto mb-10 space-y-2.5">

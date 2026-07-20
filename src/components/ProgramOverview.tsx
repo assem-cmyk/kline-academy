@@ -1,23 +1,23 @@
 const details = [
-  '8 Sessions — Saturdays & Sundays over 4 consecutive weekends',
-  'Sessions 9:00 AM – 3:00 PM · Workshops 9:00 AM – 4:00 PM',
-  'Starting Saturday, July 4, 2026',
+  '8 Sessions — Fridays & Saturdays over 4 consecutive weekends',
+  'Fridays 4:30 – 9:30 PM · Saturdays 9:30 AM – 4:30 PM',
+  'Starting Friday, September 18, 2026',
   '2 Formats: Offline (Cairo) · Online (Live Zoom)',
-  '12 participants max per batch',
-  'Split: 6 seats on OnyxCeph · 6 seats on Titan',
+  '15 participants max per batch',
+  'Split: 8 seats on OnyxCeph · 7 seats on Titan',
   '15 de-identified real cases per participant',
   'Pre & post assessment with measurable skill lift',
 ]
 
 const sessions = [
-  { num: '1', date: 'Sat · July 4, 2026', time: '9:00 AM – 3:00 PM', title: 'Introduction to Clear Aligners' },
-  { num: '2', date: 'Sun · July 5, 2026', time: '9:00 AM – 3:00 PM', title: 'The Digital Workflow' },
-  { num: '3', date: 'Sat · July 11, 2026', time: '9:00 AM – 4:00 PM', title: 'Hands-On Workshop I' },
-  { num: '4', date: 'Sun · July 12, 2026', time: '9:00 AM – 4:00 PM', title: 'Hands-On Workshop II' },
-  { num: '5', date: 'Sat · July 18, 2026', time: '9:00 AM – 4:00 PM', title: 'Hands-On Workshop III' },
-  { num: '6', date: 'Sun · July 19, 2026', time: '9:00 AM – 4:00 PM', title: 'Hands-On Workshop IV' },
-  { num: '7', date: 'Sat · July 25, 2026', time: '9:00 AM – 4:00 PM', title: 'Hands-On Workshop V' },
-  { num: '8', date: 'Sun · July 26, 2026', time: '9:00 AM – 3:00 PM', title: 'Special Cases & Capstone' },
+  { num: '1', date: 'Fri · Sep 18, 2026', time: '4:30 PM – 9:30 PM', title: 'Introduction to Clear Aligners' },
+  { num: '2', date: 'Sat · Sep 19, 2026', time: '9:30 AM – 4:30 PM', title: 'The Digital Workflow' },
+  { num: '3', date: 'Fri · Sep 25, 2026', time: '4:30 PM – 9:30 PM', title: 'Hands-On Workshop I' },
+  { num: '4', date: 'Sat · Sep 26, 2026', time: '9:30 AM – 4:30 PM', title: 'Hands-On Workshop II' },
+  { num: '5', date: 'Fri · Oct 2, 2026', time: '4:30 PM – 9:30 PM', title: 'Hands-On Workshop III' },
+  { num: '6', date: 'Sat · Oct 3, 2026', time: '9:30 AM – 4:30 PM', title: 'Hands-On Workshop IV' },
+  { num: '7', date: 'Fri · Oct 9, 2026', time: '4:30 PM – 9:30 PM', title: 'Hands-On Workshop V' },
+  { num: '8', date: 'Sat · Oct 10, 2026', time: '9:30 AM – 4:30 PM', title: 'Special Cases & Capstone' },
 ]
 
 export default function ProgramOverview() {
