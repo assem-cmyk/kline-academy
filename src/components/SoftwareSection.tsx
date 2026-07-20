@@ -30,7 +30,7 @@ export default function SoftwareSection() {
           {software.map((sw) => (
             <div
               key={sw.name}
-              className="group bg-white rounded-2xl p-8 md:p-10 shadow-premium hover:shadow-premium-lg border border-navy-700/8 hover:border-teal/30 transition-all duration-300 hover:-translate-y-1"
+              className="group bg-white rounded-2xl p-8 md:p-10 shadow-premium hover:shadow-premium-lg border border-navy-700/10 hover:border-teal/30 transition-all duration-300 hover:-translate-y-1"
             >
               {/* Logo container */}
               <div className="h-24 flex items-center justify-center mb-6 bg-gradient-to-br from-slate-50 to-white rounded-xl border border-navy-700/5 relative overflow-hidden">

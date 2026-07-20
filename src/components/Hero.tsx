@@ -33,7 +33,7 @@ export default function Hero() {
 
         {/* Subheadline */}
         <p className="text-base md:text-lg lg:text-xl text-slate-300 max-w-2xl mx-auto mb-12 leading-relaxed animate-fade-in-up" style={{ animationDelay: '0.15s' }}>
-          Egypt's first case-based bootcamp using OnyxCeph &amp; Titan — taught by K Line Europe's own specialists.
+          Egypt's first case-based bootcamp using OnyxCeph &amp; Titan — taught by K Line Europe specialists and university faculty.
         </p>
 
         {/* CTAs */}

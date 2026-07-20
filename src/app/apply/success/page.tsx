@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, useState } from 'react'
+import { useState } from 'react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 
@@ -84,13 +84,7 @@ export default function SuccessPage() {
   return (
     <>
       <Header />
-      <Suspense fallback={
-        <main className="pt-24 pb-16 min-h-screen flex items-center justify-center">
-          <div className="text-gray-400">Loading...</div>
-        </main>
-      }>
-        <SuccessContent />
-      </Suspense>
+      <SuccessContent />
       <Footer />
     </>
   )

@@ -23,16 +23,6 @@ export const metadata: Metadata = {
   },
   description:
     "Egypt's first case-based bootcamp for digital aligner planning using OnyxCeph & Titan. Taught by K Line Europe specialists. 4 weekends, 15 real cases, direct hiring pipeline.",
-  keywords: [
-    'aligner planning',
-    'digital orthodontics',
-    'OnyxCeph',
-    'Titan',
-    'K Line Europe',
-    'orthodontic training',
-    'Cairo bootcamp',
-    'clear aligners',
-  ],
   authors: [{ name: 'K Line Middle East' }],
   alternates: {
     canonical: './',
@@ -40,17 +30,16 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'K Line Academy — Master Digital Aligner Planning in 4 Weekends',
     description:
-      "Egypt's first case-based bootcamp using OnyxCeph & Titan — taught by K Line Europe's own specialists.",
+      "Egypt's first case-based bootcamp using OnyxCeph & Titan — taught by K Line Europe specialists and university faculty.",
     type: 'website',
     url: './',
     siteName: 'K Line Academy',
-    locale: 'en_US',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'K Line Academy — Master Digital Aligner Planning in 4 Weekends',
     description:
-      "Egypt's first case-based bootcamp using OnyxCeph & Titan — taught by K Line Europe's own specialists.",
+      "Egypt's first case-based bootcamp using OnyxCeph & Titan — taught by K Line Europe specialists and university faculty.",
   },
   robots: {
     index: true,

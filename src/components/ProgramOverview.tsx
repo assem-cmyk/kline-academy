@@ -1,6 +1,6 @@
 const details = [
   '8 Sessions — Fridays & Saturdays over 4 consecutive weekends',
-  'Fridays 4:30 – 9:30 PM · Saturdays 9:30 AM – 4:30 PM',
+  'Fridays 4:30–9:30 PM · Saturdays 9:30 AM–4:30 PM',
   'Starting Friday, September 18, 2026',
   'Held in person in Cairo, Egypt',
   '15 participants max per batch',
@@ -9,14 +9,14 @@ const details = [
 ]
 
 const sessions = [
-  { num: '1', date: 'Fri · Sep 18, 2026', time: '4:30 PM – 9:30 PM', title: 'The Digital Workflow' },
-  { num: '2', date: 'Sat · Sep 19, 2026', time: '9:30 AM – 4:30 PM', title: 'Introduction to Clear Aligners' },
-  { num: '3', date: 'Fri · Sep 25, 2026', time: '4:30 PM – 9:30 PM', title: 'Workshop I — Staging & Sequencing' },
-  { num: '4', date: 'Sat · Sep 26, 2026', time: '9:30 AM – 4:30 PM', title: 'Workshop II — Attachments & IPR Planning' },
-  { num: '5', date: 'Fri · Oct 2, 2026', time: '4:30 PM – 9:30 PM', title: 'Workshop III — Anchorage & Difficult Movements' },
-  { num: '6', date: 'Sat · Oct 3, 2026', time: '9:30 AM – 4:30 PM', title: 'Workshop IV — Finishing & Tracking' },
-  { num: '7', date: 'Fri · Oct 9, 2026', time: '4:30 PM – 9:30 PM', title: 'Workshop V — Full-Case Planning Sprint' },
-  { num: '8', date: 'Sat · Oct 10, 2026', time: '9:30 AM – 4:30 PM', title: 'Special Cases, Capstone & The Business of Aligners' },
+  { num: '1', date: 'Fri · Sep 18, 2026', time: '4:30–9:30 PM', title: 'The Digital Workflow' },
+  { num: '2', date: 'Sat · Sep 19, 2026', time: '9:30 AM–4:30 PM', title: 'Introduction to Clear Aligners' },
+  { num: '3', date: 'Fri · Sep 25, 2026', time: '4:30–9:30 PM', title: 'Workshop I — Staging & Sequencing' },
+  { num: '4', date: 'Sat · Sep 26, 2026', time: '9:30 AM–4:30 PM', title: 'Workshop II — Attachments & IPR Planning' },
+  { num: '5', date: 'Fri · Oct 2, 2026', time: '4:30–9:30 PM', title: 'Workshop III — Anchorage & Difficult Movements' },
+  { num: '6', date: 'Sat · Oct 3, 2026', time: '9:30 AM–4:30 PM', title: 'Workshop IV — Finishing & Tracking' },
+  { num: '7', date: 'Fri · Oct 9, 2026', time: '4:30–9:30 PM', title: 'Workshop V — Full-Case Planning Sprint' },
+  { num: '8', date: 'Sat · Oct 10, 2026', time: '9:30 AM–4:30 PM', title: 'Special Cases, Capstone & The Business of Aligners' },
 ]
 
 export default function ProgramOverview() {

@@ -13,7 +13,8 @@ export const faqs = [
   },
   {
     q: 'What is the refund policy?',
-    a: 'Full refund up to 10 days before the first session. After that, fees are non-refundable. The full terms are on our Terms & Refund Policy page.',
+    a: 'Full refund up to 10 days before the first session, processed within 14 business days. After that, fees are non-refundable. If we ever cancel or move a batch, you choose between a full refund or a guaranteed seat in the next batch.',
+    link: { href: '/terms', label: 'Read the full Terms & Refund Policy' },
   },
   {
     q: 'Do I need my own software license?',
@@ -62,7 +63,7 @@ export default function Faq() {
           {faqs.map((f) => (
             <details
               key={f.q}
-              className="group bg-white rounded-2xl border border-navy-700/8 shadow-premium open:border-teal/30 transition-colors"
+              className="group bg-white rounded-2xl border border-navy-700/10 shadow-premium open:border-teal/30 transition-colors"
             >
               <summary className="flex items-center justify-between gap-4 cursor-pointer list-none px-6 py-5 text-[15px] md:text-base font-semibold text-navy [&::-webkit-details-marker]:hidden">
                 {f.q}
@@ -72,7 +73,17 @@ export default function Faq() {
                   </svg>
                 </span>
               </summary>
-              <p className="px-6 pb-6 text-[15px] text-navy/70 leading-relaxed">{f.a}</p>
+              <p className="px-6 pb-6 text-[15px] text-navy/70 leading-relaxed">
+                {f.a}
+                {'link' in f && f.link && (
+                  <>
+                    {' '}
+                    <a href={f.link.href} className="text-teal-dark font-medium underline underline-offset-2 hover:text-navy transition-colors">
+                      {f.link.label}
+                    </a>
+                  </>
+                )}
+              </p>
             </details>
           ))}
         </div>

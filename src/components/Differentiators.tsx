@@ -54,7 +54,7 @@ export default function Differentiators() {
           {items.map((item, i) => (
             <div
               key={item.title}
-              className="group relative bg-white rounded-2xl p-8 border border-navy-700/8 hover:border-teal/30 shadow-premium hover:shadow-premium-lg transition-all duration-300 hover:-translate-y-1"
+              className="group relative bg-white rounded-2xl p-8 border border-navy-700/10 hover:border-teal/30 shadow-premium hover:shadow-premium-lg transition-all duration-300 hover:-translate-y-1"
             >
               {/* Icon + Stat */}
               <div className="flex items-start justify-between mb-6">

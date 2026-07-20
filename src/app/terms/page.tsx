@@ -6,6 +6,18 @@ export const metadata: Metadata = {
   title: 'Terms & Refund Policy',
   description: 'Program terms, payment schedule, and refund policy for the K Line Academy digital aligner planning bootcamp.',
   alternates: { canonical: '/terms' },
+  openGraph: {
+    title: 'Terms & Refund Policy — K Line Academy',
+    description: 'Program terms, payment schedule, and refund policy for the K Line Academy digital aligner planning bootcamp.',
+    url: '/terms',
+    siteName: 'K Line Academy',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Terms & Refund Policy — K Line Academy',
+    description: 'Program terms, payment schedule, and refund policy for the K Line Academy digital aligner planning bootcamp.',
+  },
 }
 
 export default function TermsPage() {

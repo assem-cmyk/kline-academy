@@ -161,6 +161,10 @@ export default function RegistrationForm() {
         formRef.current?.querySelector<HTMLElement>('[aria-invalid="true"]') ??
         formRef.current?.querySelector<HTMLElement>('.field-error')
       if (el) {
+        // Error <p> fallbacks aren't natively focusable — make them so
+        if (!el.hasAttribute('tabindex') && !/^(input|select|textarea|button|a)$/i.test(el.tagName)) {
+          el.setAttribute('tabindex', '-1')
+        }
         el.scrollIntoView({ behavior: scrollBehavior(), block: 'center' })
         el.focus({ preventScroll: true })
       }
@@ -189,7 +193,12 @@ export default function RegistrationForm() {
     if (s === 3) {
       if (!form.workflow) errs.workflow = 'Select your current workflow'
       if (form.casesCompleted === '') errs.casesCompleted = 'Enter number of cases'
-      else if (parseInt(form.casesCompleted) < 0) errs.casesCompleted = 'Must be 0 or more'
+      else if (
+        !Number.isInteger(Number(form.casesCompleted)) ||
+        Number(form.casesCompleted) < 0 ||
+        Number(form.casesCompleted) > 10000
+      )
+        errs.casesCompleted = 'Enter a whole number between 0 and 10,000'
       if (!form.challenge) errs.challenge = 'Select your biggest challenge'
       if (!form.commitHours) errs.commitHours = 'This field is required'
       if (!form.willingGraded) errs.willingGraded = 'This field is required'
@@ -312,7 +321,7 @@ export default function RegistrationForm() {
   }
 
   const inputCls = (field: keyof FormData) =>
-    `w-full border ${errors[field] ? 'border-red-400' : 'border-gray-300'} rounded-lg px-4 py-3 text-sm focus:border-teal-dark transition-colors`
+    `w-full border ${errors[field] ? 'border-red-500' : 'border-gray-500'} rounded-lg px-4 py-3 text-sm focus:border-teal-dark transition-colors`
 
   const fieldAria = (field: keyof FormData) => ({
     'aria-invalid': errors[field] ? true : undefined,
@@ -325,22 +334,22 @@ export default function RegistrationForm() {
       <div className="space-y-5">
         <div>
           <Label htmlFor="fullName">Full Name *</Label>
-          <input id="fullName" name="name" type="text" autoComplete="name" className={inputCls('fullName')} value={form.fullName} onChange={(e) => set('fullName', e.target.value)} placeholder="Your full name" {...fieldAria('fullName')} />
+          <input id="fullName" name="name" type="text" autoComplete="name" maxLength={100} className={inputCls('fullName')} value={form.fullName} onChange={(e) => set('fullName', e.target.value)} placeholder="Your full name" {...fieldAria('fullName')} />
           <FieldError field="fullName" errors={errors} />
         </div>
         <div>
           <Label htmlFor="email">Email Address *</Label>
-          <input id="email" name="email" type="email" autoComplete="email" className={inputCls('email')} value={form.email} onChange={(e) => set('email', e.target.value)} placeholder="you@example.com" {...fieldAria('email')} />
+          <input id="email" name="email" type="email" autoComplete="email" maxLength={200} className={inputCls('email')} value={form.email} onChange={(e) => set('email', e.target.value)} placeholder="you@example.com" {...fieldAria('email')} />
           <FieldError field="email" errors={errors} />
         </div>
         <div>
           <Label htmlFor="whatsapp">WhatsApp Number (incl. country code) *</Label>
-          <input id="whatsapp" name="tel" type="tel" inputMode="tel" autoComplete="tel" className={inputCls('whatsapp')} value={form.whatsapp} onChange={(e) => set('whatsapp', e.target.value)} placeholder="+20 1XX XXX XXXX" {...fieldAria('whatsapp')} />
+          <input id="whatsapp" name="tel" type="tel" inputMode="tel" autoComplete="tel" maxLength={30} className={inputCls('whatsapp')} value={form.whatsapp} onChange={(e) => set('whatsapp', e.target.value)} placeholder="+20 1XX XXX XXXX" {...fieldAria('whatsapp')} />
           <FieldError field="whatsapp" errors={errors} />
         </div>
         <div>
           <Label htmlFor="city">Country / City *</Label>
-          <input id="city" name="city" type="text" autoComplete="address-level2" className={inputCls('city')} value={form.city} onChange={(e) => set('city', e.target.value)} placeholder="Cairo, Egypt" {...fieldAria('city')} />
+          <input id="city" name="city" type="text" autoComplete="address-level2" maxLength={100} className={inputCls('city')} value={form.city} onChange={(e) => set('city', e.target.value)} placeholder="Cairo, Egypt" {...fieldAria('city')} />
           <FieldError field="city" errors={errors} />
         </div>
         {/* Honeypot — hidden from humans, bots often fill every field */}
@@ -408,7 +417,7 @@ export default function RegistrationForm() {
                 className={`border rounded-lg p-4 text-left transition-all ${
                   form.software === opt.value
                     ? 'border-teal-dark bg-teal/5 ring-2 ring-teal-dark/30'
-                    : 'border-gray-200 hover:border-gray-300'
+                    : 'border-gray-500 hover:border-navy'
                 }`}
               >
                 <p className="font-semibold text-navy text-sm">{opt.label}</p>
@@ -443,7 +452,7 @@ export default function RegistrationForm() {
 
         <div>
           <Label htmlFor="casesCompleted">Aligner cases completed end-to-end *</Label>
-          <input id="casesCompleted" type="number" min="0" className={inputCls('casesCompleted')} value={form.casesCompleted} onChange={(e) => set('casesCompleted', e.target.value)} placeholder="0" {...fieldAria('casesCompleted')} />
+          <input id="casesCompleted" type="number" min="0" max="10000" step="1" className={inputCls('casesCompleted')} value={form.casesCompleted} onChange={(e) => set('casesCompleted', e.target.value)} placeholder="0" {...fieldAria('casesCompleted')} />
           <FieldError field="casesCompleted" errors={errors} />
         </div>
 
@@ -495,11 +504,12 @@ export default function RegistrationForm() {
             onChange={(e) => set('goal', e.target.value)}
             placeholder="Be specific — what will you do differently in your clinic after this program?"
             rows={4}
+            maxLength={2000}
             {...fieldAria('goal')}
           />
           <div className="flex justify-between mt-1">
             <FieldError field="goal" errors={errors} />
-            <span className={`text-xs ${form.goal.trim().length < 20 ? 'text-gray-500' : 'text-green-600'}`}>
+            <span className={`text-xs ${form.goal.trim().length < 20 ? 'text-gray-500' : 'text-green-700'}`}>
               {form.goal.trim().length}/20 min
             </span>
           </div>
@@ -511,7 +521,7 @@ export default function RegistrationForm() {
             Upload your CV *
           </label>
           <div className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors focus-within:ring-2 focus-within:ring-teal-dark/50 ${
-            cvError ? 'border-red-400 bg-red-50/30' : cvFile ? 'border-teal-dark bg-teal/5' : 'border-gray-300 hover:border-gray-400'
+            cvError ? 'border-red-500 bg-red-50/30' : cvFile ? 'border-teal-dark bg-teal/5' : 'border-gray-500 hover:border-navy'
           }`}>
             <input
               id="cv"
@@ -623,9 +633,12 @@ export default function RegistrationForm() {
               checked={form.investmentConfirmed}
               onChange={(e) => set('investmentConfirmed', e.target.checked)}
               className="mt-1 w-4 h-4 accent-teal-dark"
+              {...fieldAria('investmentConfirmed')}
             />
             <span className="text-sm text-gray-700">
-              I confirm I am ready for the 40,000 EGP investment. I understand payment is made via bank transfer or InstaPay after acceptance. A 50% deposit (20,000 EGP) secures my seat, with the remaining balance due at Session 1. I understand that refunds are available up to 10 days before the first session; after that, fees are non-refundable. I agree to the processing of my data as described in the{' '}
+              I confirm I am ready for the 40,000 EGP investment. I understand payment is made via bank transfer or InstaPay after acceptance. A 50% deposit (20,000 EGP) secures my seat, with the remaining balance due at Session 1. I agree to the{' '}
+              <a href="/terms" target="_blank" className="underline text-navy hover:text-teal-dark">Terms &amp; Refund Policy</a>{' '}
+              (full refund up to 10 days before the first session; after that, fees are non-refundable) and to the processing of my data as described in the{' '}
               <a href="/privacy" target="_blank" className="underline text-navy hover:text-teal-dark">Privacy Policy</a>.
             </span>
           </label>

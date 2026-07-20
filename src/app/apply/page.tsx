@@ -16,6 +16,12 @@ export const metadata: Metadata = {
     siteName: 'K Line Academy',
     type: 'website',
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Apply — K Line Academy',
+    description:
+      'Apply for the K Line Academy digital aligner planning bootcamp. 4 weekends, 15 real cases, direct hiring pipeline into K Line Europe GmbH.',
+  },
 }
 
 export default function ApplyPage() {

@@ -1,10 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
-export default function Header() {
+export default function Header({ overDark = false }: { overDark?: boolean }) {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const burgerRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
@@ -16,7 +17,10 @@ export default function Header() {
   useEffect(() => {
     if (!mobileOpen) return
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setMobileOpen(false)
+      if (e.key === 'Escape') {
+        setMobileOpen(false)
+        burgerRef.current?.focus()
+      }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -30,11 +34,21 @@ export default function Header() {
     { label: 'FAQ', href: '/#faq' },
   ]
 
+  // Over the dark hero the header is transparent, so text must be light until
+  // the user scrolls and the white backdrop appears (WCAG 1.4.3)
+  const onDarkBg = overDark && !scrolled && !mobileOpen
+  const linkCls = onDarkBg
+    ? 'text-white/90 hover:text-white'
+    : 'text-navy/80 hover:text-navy'
+  const wordmarkCls = onDarkBg ? 'text-white' : 'text-navy'
+  const dividerCls = onDarkBg ? 'bg-white/30' : 'bg-navy-700/20'
+  const burgerBarCls = onDarkBg ? 'bg-white' : 'bg-navy'
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? 'bg-white/85 backdrop-blur-xl border-b border-navy-700/8 shadow-sm'
+        scrolled || mobileOpen
+          ? 'bg-white/85 backdrop-blur-xl border-b border-navy-700/10 shadow-sm'
           : 'bg-transparent'
       }`}
     >
@@ -47,10 +61,10 @@ export default function Header() {
               alt="K Line"
               width={200}
               height={200}
-              className="h-9 w-auto object-contain transition-transform group-hover:scale-105"
+              className="h-9 w-auto object-contain transition-transform group-hover:scale-105 bg-white rounded"
             />
-            <div className="h-7 w-px bg-navy-700/20" />
-            <span className="text-base font-semibold tracking-tight text-navy">
+            <div className={`h-7 w-px ${dividerCls}`} />
+            <span className={`text-base font-semibold tracking-tight transition-colors ${wordmarkCls}`}>
               Academy<span className="text-teal">.</span>
             </span>
           </a>
@@ -61,7 +75,7 @@ export default function Header() {
               <a
                 key={link.href}
                 href={link.href}
-                className="link-underline text-[15px] font-medium text-navy/80 hover:text-navy transition-colors"
+                className={`link-underline text-[15px] font-medium transition-colors ${linkCls}`}
               >
                 {link.label}
               </a>
@@ -76,6 +90,7 @@ export default function Header() {
 
           {/* Mobile Hamburger */}
           <button
+            ref={burgerRef}
             onClick={() => setMobileOpen(!mobileOpen)}
             className="md:hidden p-2"
             aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
@@ -83,9 +98,9 @@ export default function Header() {
             aria-controls="mobile-menu"
           >
             <div className="w-6 h-5 flex flex-col justify-between">
-              <span className={`block h-0.5 bg-navy transition-transform ${mobileOpen ? 'rotate-45 translate-y-2' : ''}`} />
-              <span className={`block h-0.5 bg-navy transition-opacity ${mobileOpen ? 'opacity-0' : ''}`} />
-              <span className={`block h-0.5 bg-navy transition-transform ${mobileOpen ? '-rotate-45 -translate-y-2' : ''}`} />
+              <span className={`block h-0.5 transition-all ${burgerBarCls} ${mobileOpen ? 'rotate-45 translate-y-2' : ''}`} />
+              <span className={`block h-0.5 transition-all ${burgerBarCls} ${mobileOpen ? 'opacity-0' : ''}`} />
+              <span className={`block h-0.5 transition-all ${burgerBarCls} ${mobileOpen ? '-rotate-45 -translate-y-2' : ''}`} />
             </div>
           </button>
         </div>
@@ -99,7 +114,7 @@ export default function Header() {
                   key={link.href}
                   href={link.href}
                   onClick={() => setMobileOpen(false)}
-                  className="text-sm font-medium text-navy hover:text-teal"
+                  className="text-sm font-medium text-navy hover:text-teal-dark"
                 >
                   {link.label}
                 </a>

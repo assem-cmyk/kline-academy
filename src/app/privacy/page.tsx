@@ -6,6 +6,18 @@ export const metadata: Metadata = {
   title: 'Privacy Policy',
   description: 'How K Line Academy collects, uses, and protects the personal data you share when applying to the program.',
   alternates: { canonical: '/privacy' },
+  openGraph: {
+    title: 'Privacy Policy — K Line Academy',
+    description: 'How K Line Academy collects, uses, and protects the personal data you share when applying to the program.',
+    url: '/privacy',
+    siteName: 'K Line Academy',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Privacy Policy — K Line Academy',
+    description: 'How K Line Academy collects, uses, and protects the personal data you share when applying to the program.',
+  },
 }
 
 export default function PrivacyPage() {

@@ -23,12 +23,14 @@ const courseJsonLd = {
     name: 'K Line Academy',
     url: SITE_URL,
   },
+  image: `${SITE_URL}/opengraph-image`,
   offers: {
     '@type': 'Offer',
     price: '40000',
     priceCurrency: 'EGP',
     availability: 'https://schema.org/LimitedAvailability',
     url: `${SITE_URL}/apply`,
+    validFrom: '2026-07-20',
     category: 'Professional Training',
   },
   courseWorkload: 'PT48H',
@@ -79,7 +81,7 @@ const faqJsonLd = {
 export default function Home() {
   return (
     <>
-      <Header />
+      <Header overDark />
       <main id="main">
         <Hero />
         <Differentiators />

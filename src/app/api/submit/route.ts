@@ -91,6 +91,8 @@ function hasValidMagicBytes(base64: string): boolean {
 const RATE_WINDOW_MS = 10 * 60 * 1000
 const RATE_MAX = 5
 const rateMap = new Map<string, number[]>()
+// email -> last successful submission timestamp (for retry dedup)
+const recentSubmissions = new Map<string, number>()
 
 function isRateLimited(ip: string): boolean {
   const now = Date.now()
@@ -110,13 +112,33 @@ function isRateLimited(ip: string): boolean {
   return false
 }
 
+const STRING_FIELDS: (keyof FormPayload)[] = [
+  'fullName', 'email', 'whatsapp', 'city', 'batch', 'software', 'workflow',
+  'casesCompleted', 'challenge', 'commitHours', 'willingGraded', 'confidentiality', 'goal',
+]
+
+// Reject malformed payloads (wrong types) with a clean 400 instead of a 500
+function hasValidShape(data: unknown): data is FormPayload {
+  if (typeof data !== 'object' || data === null) return false
+  const d = data as Record<string, unknown>
+  if (!STRING_FIELDS.every((f) => typeof d[f] === 'string')) return false
+  if (typeof d.investmentConfirmed !== 'boolean') return false
+  if (d.website !== undefined && typeof d.website !== 'string') return false
+  if (d.cv !== undefined) {
+    const cv = d.cv as Record<string, unknown>
+    if (typeof cv !== 'object' || cv === null) return false
+    if (typeof cv.filename !== 'string' || typeof cv.contentType !== 'string' || typeof cv.content !== 'string') return false
+  }
+  return true
+}
+
 function validate(data: FormPayload): string | null {
   if (!data.fullName?.trim() || data.fullName.length > 100) return 'Full name is required'
   if (!data.email?.trim() || data.email.length > 200 || !isValidEmail(data.email.trim()))
     return 'Valid email is required'
   if (!data.whatsapp?.trim() || data.whatsapp.length > 30 || !isValidPhone(data.whatsapp))
     return 'Valid WhatsApp number is required'
-  if (!data.city?.trim() || data.city.length > 100) return 'City is required'
+  if (!data.city?.trim() || data.city.length > 100) return 'Country / City is required'
   if (!BATCHES.includes(data.batch)) return 'Batch selection is required'
   if (!SOFTWARE.includes(data.software)) return 'Software preference is required'
   if (!WORKFLOWS.includes(data.workflow)) return 'Workflow is required'
@@ -227,11 +249,12 @@ function applicantEmailHtml(d: FormPayload): string {
         <ol style="font-size:14px;color:#333;line-height:2;padding-left:20px;margin:0 0 24px">
           <li>We review every application within 48 hours</li>
           <li>We'll contact you with a decision via WhatsApp or email</li>
-          <li>A 50% deposit (20,000 EGP) confirms your seat</li>
+          <li>If accepted, a 50% deposit (20,000 EGP) confirms your seat</li>
           <li>The remaining balance (20,000 EGP) is due at Session 1</li>
         </ol>
         <p style="font-size:13px;color:#666;line-height:1.6;margin:0 0 16px;padding:12px 16px;background:#e9f8f8;border-left:3px solid ${TEAL};border-radius:4px">
           <strong style="color:${NAVY}">Refund Policy:</strong> Full refund available up to 10 days before the first session. After that, fees are non-refundable.
+          <a href="https://klineacademy.org/terms" style="color:${TEAL}">Full Terms &amp; Refund Policy</a>
         </p>
         <p style="font-size:14px;color:#333;line-height:1.7;margin:0 0 24px">
           Questions? Reply to this email or message us on <a href="https://wa.me/201227624659" style="color:${TEAL}">WhatsApp</a>.
@@ -245,6 +268,29 @@ function applicantEmailHtml(d: FormPayload): string {
       ${socialFooterHtml}
     </div>
   `
+}
+
+function applicantEmailText(d: FormPayload): string {
+  const firstName = d.fullName.trim().split(' ')[0]
+  return [
+    `Hi ${firstName},`,
+    '',
+    `We've received your application for K Line Academy — ${BATCH_FRIENDLY}.`,
+    '',
+    "Here's what happens next:",
+    '1. We review every application within 48 hours',
+    "2. We'll contact you with a decision via WhatsApp or email",
+    '3. If accepted, a 50% deposit (20,000 EGP) confirms your seat',
+    '4. The remaining balance (20,000 EGP) is due at Session 1',
+    '',
+    'Refund policy: full refund available up to 10 days before the first session; after that, fees are non-refundable. Full terms: https://klineacademy.org/terms',
+    '',
+    'Questions? Reply to this email or message us on WhatsApp: https://wa.me/201227624659',
+    '',
+    '— Dr. Assem Youssef',
+    'CEO, K Line Middle East',
+    ADMIN_EMAIL,
+  ].join('\n')
 }
 
 export async function POST(request: Request) {
@@ -267,7 +313,14 @@ export async function POST(request: Request) {
       )
     }
 
-    const data: FormPayload = await request.json()
+    const raw = await request.json()
+    if (!hasValidShape(raw)) {
+      return NextResponse.json(
+        { success: false, error: 'Invalid submission. Please reload the page and try again.' },
+        { status: 400 }
+      )
+    }
+    const data: FormPayload = raw
 
     // Honeypot: real users never fill this field. Pretend success so bots don't adapt.
     if (data.website) {
@@ -277,6 +330,14 @@ export async function POST(request: Request) {
     const validationError = validate(data)
     if (validationError) {
       return NextResponse.json({ success: false, error: validationError }, { status: 400 })
+    }
+
+    // Idempotency: an identical email re-submitted within 2 minutes is almost
+    // certainly a retry after a lost response — acknowledge without re-sending.
+    const dedupKey = data.email.trim().toLowerCase()
+    const lastSeen = recentSubmissions.get(dedupKey)
+    if (lastSeen && Date.now() - lastSeen < 2 * 60 * 1000) {
+      return NextResponse.json({ success: true, deduplicated: true })
     }
 
     const resend = new Resend(process.env.RESEND_API_KEY)
@@ -344,6 +405,7 @@ export async function POST(request: Request) {
         replyTo: ADMIN_EMAIL,
         subject: 'Your K Line Academy Application — Received',
         html: applicantEmailHtml(data),
+        text: applicantEmailText(data),
       })
       applicantOk = !applicantResult.error
       if (applicantResult.error) {
@@ -356,6 +418,13 @@ export async function POST(request: Request) {
     // Success ONLY if the application actually reached the admissions inbox.
     // The applicant confirmation is best-effort.
     if (adminOk) {
+      recentSubmissions.set(dedupKey, Date.now())
+      if (recentSubmissions.size > 1000) {
+        const cutoff = Date.now() - 10 * 60 * 1000
+        recentSubmissions.forEach((t, k) => {
+          if (t < cutoff) recentSubmissions.delete(k)
+        })
+      }
       return NextResponse.json({ success: true, adminOk, applicantOk })
     }
 
