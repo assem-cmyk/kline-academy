@@ -4,7 +4,6 @@ const details = [
   'Starting Friday, September 18, 2026',
   '2 Formats: Offline (Cairo) · Online (Live Zoom)',
   '15 participants max per batch',
-  'Split: 8 seats on OnyxCeph · 7 seats on Titan',
   '15 de-identified real cases per participant',
   'Pre & post assessment with measurable skill lift',
 ]

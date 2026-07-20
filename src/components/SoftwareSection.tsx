@@ -5,13 +5,13 @@ const software = [
     name: 'OnyxCeph',
     logo: '/software/onyxceph-logo.png',
     tagline: 'Cloud-based aligner planning',
-    features: ['8 seats per batch', 'Beginner-friendly workflow', 'Instant cloud collaboration'],
+    features: ['Beginner-friendly workflow', 'Instant cloud collaboration'],
   },
   {
     name: 'Titan',
     logo: '/software/titan-logo.png',
     tagline: 'Advanced dental design',
-    features: ['7 seats per batch', 'Industry-standard toolchain', 'Pro-grade precision'],
+    features: ['Industry-standard toolchain', 'Pro-grade precision'],
   },
 ]
 
