@@ -5,6 +5,7 @@ const included = [
   'Printed session materials',
   'Pre & post skills assessment',
   'K Line Academy completion certificate',
+  'ADA certification',
   'K Line Europe hiring pipeline eligibility',
   '50% discount on first 2 cases',
   '6-month alumni webinar access',
