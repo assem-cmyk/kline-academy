@@ -147,8 +147,8 @@ function applicantEmailHtml(d: FormPayload): string {
         <ol style="font-size:14px;color:#333;line-height:2;padding-left:20px;margin:0 0 24px">
           <li>We'll review your application within 48 hours</li>
           <li>If accepted, we'll contact you via WhatsApp or email</li>
-          <li>A 50% deposit ($375 USD) confirms your seat</li>
-          <li>Full balance ($375 USD) is due at Session 1</li>
+          <li>A 50% deposit (20,000 EGP) confirms your seat</li>
+          <li>Full balance (20,000 EGP) is due at Session 1</li>
         </ol>
         <p style="font-size:13px;color:#666;line-height:1.6;margin:0 0 16px;padding:12px 16px;background:#fdf6e3;border-left:3px solid #D4A843;border-radius:4px">
           <strong style="color:#1A1A2E">Refund Policy:</strong> Full refund available up to 10 days before the first session. After that, fees are non-refundable.
