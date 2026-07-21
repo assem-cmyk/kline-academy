@@ -34,21 +34,22 @@ const courseJsonLd = {
     validThrough: '2026-10-02',
     category: 'Paid',
   },
-  courseWorkload: 'PT48H',
+  courseWorkload: 'PT50H',
   hasCourseInstance: {
     '@type': 'CourseInstance',
     courseMode: 'Onsite',
     startDate: '2026-10-02',
     endDate: '2026-10-24',
-    courseWorkload: 'PT48H',
+    courseWorkload: 'PT50H',
+
     courseSchedule: [
       {
         '@type': 'Schedule',
         repeatFrequency: 'Weekly',
         repeatCount: 4,
         byDay: 'https://schema.org/Friday',
-        startTime: '16:30',
-        endTime: '21:30',
+        startTime: '15:00',
+        endTime: '20:30',
         startDate: '2026-10-02',
         endDate: '2026-10-23',
       },

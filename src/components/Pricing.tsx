@@ -1,10 +1,9 @@
 import Link from 'next/link'
 
 const included = [
-  '8 sessions (48 hours total)',
+  '8 sessions (50 hours total)',
   '15 real case assignments with answer keys',
   'OnyxCeph or Titan software access',
-  'Printed session materials',
   'Pre & post skills assessment',
   'K Line Academy completion certificate',
   'ADA certification',
@@ -55,7 +54,7 @@ export default function Pricing() {
               Standard price: <span className="text-slate-300 font-semibold">$900</span> · Early-bird price: <span className="text-teal-light font-semibold">$800</span>
             </p>
             <p className="text-slate-400 text-sm mb-10">
-              4 weekends · 48 hours · 15 cases
+              4 weekends · 50 hours · 15 cases
             </p>
 
             <div className="text-left max-w-md mx-auto mb-10 space-y-2.5">

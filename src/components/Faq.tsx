@@ -30,7 +30,7 @@ export const faqs = [
   },
   {
     q: 'Where exactly does the course take place?',
-    a: 'In person in Cairo, Egypt, on Fridays (4:30–9:30 PM) and Saturdays (9:30 AM–4:30 PM). The exact venue address is shared with accepted applicants before the first session.',
+    a: 'In person in Cairo, Egypt, on Fridays (3:00–8:30 PM) and Saturdays (9:30 AM–4:30 PM). The exact venue address is shared with accepted applicants before the first session.',
   },
   {
     q: 'What equipment do I need to bring?',

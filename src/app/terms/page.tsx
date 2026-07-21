@@ -34,7 +34,7 @@ export default function TermsPage() {
               <h2 className="text-xl font-bold text-navy mb-3">The program</h2>
               <p>
                 K Line Academy Batch 2 is an in-person training program held in Cairo, Egypt: 8 sessions
-                over 4 consecutive weekends (October 2 – 24, 2026), Fridays 4:30–9:30 PM and
+                over 4 consecutive weekends (October 2 – 24, 2026), Fridays 3:00–8:30 PM and
                 Saturdays 9:30 AM–4:30 PM. Seats are limited to 15 participants. Every application is
                 reviewed; a seat is confirmed on acceptance and receipt of the deposit.
               </p>
