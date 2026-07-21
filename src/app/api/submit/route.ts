@@ -275,6 +275,30 @@ function applicantEmailHtml(d: FormPayload): string {
   `
 }
 
+function adminEmailText(d: FormPayload): string {
+  return [
+    'New K Line Academy application',
+    '',
+    `Name: ${d.fullName}`,
+    `Email: ${d.email}`,
+    `WhatsApp: ${d.whatsapp}`,
+    `City: ${d.city}`,
+    `Batch: ${d.batch}`,
+    `Software: ${d.software}`,
+    `Workflow: ${d.workflow}`,
+    `Cases completed: ${d.casesCompleted}`,
+    `Biggest challenge: ${d.challenge}`,
+    `Commits 2-4 hrs/week: ${d.commitHours}`,
+    `Willing to be graded: ${d.willingGraded}`,
+    `Confidentiality: ${d.confidentiality}`,
+    `Goal: ${d.goal}`,
+    `CV: ${d.cv ? d.cv.filename : 'Not provided'}`,
+    `Submitted: ${cairoTimestamp()}`,
+    '',
+    `Reply to this email or WhatsApp ${d.whatsapp} to follow up.`,
+  ].join('\n')
+}
+
 function applicantEmailText(d: FormPayload): string {
   const firstName = d.fullName.trim().split(' ')[0]
   return [
@@ -358,6 +382,7 @@ export async function POST(request: Request) {
       to: ADMIN_EMAIL,
       subject: `New Application — ${data.fullName.slice(0, 60)} · ${data.software}`,
       html: adminEmailHtml(data),
+      text: adminEmailText(data),
       replyTo: data.email,
     }
 
@@ -408,21 +433,26 @@ export async function POST(request: Request) {
       console.error('[submit] Admin email exception:', e)
     }
 
-    try {
-      const applicantResult = await resend.emails.send({
-        from: FROM,
-        to: data.email,
-        replyTo: ADMIN_EMAIL,
-        subject: 'Your K Line Academy Application — Received',
-        html: applicantEmailHtml(data),
-        text: applicantEmailText(data),
-      })
-      applicantOk = !applicantResult.error
-      if (applicantResult.error) {
-        console.error('[submit] Applicant email error:', applicantResult.error)
+    // Send the applicant confirmation ONLY after the application verifiably
+    // reached the admissions inbox — never reassure a candidate whose
+    // application was lost.
+    if (adminOk) {
+      try {
+        const applicantResult = await resend.emails.send({
+          from: FROM,
+          to: data.email,
+          replyTo: ADMIN_EMAIL,
+          subject: 'Your K Line Academy Application — Received',
+          html: applicantEmailHtml(data),
+          text: applicantEmailText(data),
+        })
+        applicantOk = !applicantResult.error
+        if (applicantResult.error) {
+          console.error('[submit] Applicant email error:', applicantResult.error)
+        }
+      } catch (e) {
+        console.error('[submit] Applicant email exception:', e)
       }
-    } catch (e) {
-      console.error('[submit] Applicant email exception:', e)
     }
 
     // Success ONLY if the application actually reached the admissions inbox.
