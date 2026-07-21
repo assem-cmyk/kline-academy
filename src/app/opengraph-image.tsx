@@ -98,7 +98,7 @@ export default function OpengraphImage() {
           }}
         >
           <div style={{ display: 'flex', color: '#94a3b8', fontSize: 28 }}>
-            Sep 18 – Oct 10, 2026 · Fridays &amp; Saturdays
+            Oct 2 – 24, 2026 · Fridays &amp; Saturdays
           </div>
           <div style={{ display: 'flex', color: '#06B0AE', fontSize: 28, fontWeight: 700 }}>
             OnyxCeph &amp; Titan

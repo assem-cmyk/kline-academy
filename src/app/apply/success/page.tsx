@@ -38,7 +38,7 @@ function SuccessContent() {
           Thank you for applying.
         </p>
         <p className="text-gray-500 mb-4 leading-relaxed">
-          We&apos;ve received your application for <strong>Batch 2 in Cairo (September 18 – October 10, 2026)</strong>.
+          We&apos;ve received your application for <strong>Batch 2 in Cairo (October 2 – 24, 2026)</strong>.
           We review every application within 48 hours and will contact you with a decision
           via WhatsApp or email. If accepted, you&apos;ll receive payment details to confirm
           your seat with a 50% deposit.

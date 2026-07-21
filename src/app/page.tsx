@@ -26,20 +26,20 @@ const courseJsonLd = {
   image: `${SITE_URL}/opengraph-image`,
   offers: {
     '@type': 'Offer',
-    price: '40000',
-    priceCurrency: 'EGP',
+    price: '800',
+    priceCurrency: 'USD',
     availability: 'https://schema.org/LimitedAvailability',
     url: `${SITE_URL}/apply`,
     validFrom: '2026-07-20',
-    validThrough: '2026-09-18',
+    validThrough: '2026-10-02',
     category: 'Paid',
   },
   courseWorkload: 'PT48H',
   hasCourseInstance: {
     '@type': 'CourseInstance',
     courseMode: 'Onsite',
-    startDate: '2026-09-18',
-    endDate: '2026-10-10',
+    startDate: '2026-10-02',
+    endDate: '2026-10-24',
     courseWorkload: 'PT48H',
     courseSchedule: [
       {
@@ -49,8 +49,8 @@ const courseJsonLd = {
         byDay: 'https://schema.org/Friday',
         startTime: '16:30',
         endTime: '21:30',
-        startDate: '2026-09-18',
-        endDate: '2026-10-09',
+        startDate: '2026-10-02',
+        endDate: '2026-10-23',
       },
       {
         '@type': 'Schedule',
@@ -59,8 +59,8 @@ const courseJsonLd = {
         byDay: 'https://schema.org/Saturday',
         startTime: '09:30',
         endTime: '16:30',
-        startDate: '2026-09-19',
-        endDate: '2026-10-10',
+        startDate: '2026-10-03',
+        endDate: '2026-10-24',
       },
     ],
     instructor: [

@@ -34,7 +34,7 @@ export default function TermsPage() {
               <h2 className="text-xl font-bold text-navy mb-3">The program</h2>
               <p>
                 K Line Academy Batch 2 is an in-person training program held in Cairo, Egypt: 8 sessions
-                over 4 consecutive weekends (September 18 – October 10, 2026), Fridays 4:30–9:30 PM and
+                over 4 consecutive weekends (October 2 – 24, 2026), Fridays 4:30–9:30 PM and
                 Saturdays 9:30 AM–4:30 PM. Seats are limited to 15 participants. Every application is
                 reviewed; a seat is confirmed on acceptance and receipt of the deposit.
               </p>
@@ -43,9 +43,9 @@ export default function TermsPage() {
             <section>
               <h2 className="text-xl font-bold text-navy mb-3">Payment</h2>
               <ul className="list-disc pl-6 space-y-1">
-                <li>The program fee is 40,000 EGP, payable by bank transfer or InstaPay after acceptance.</li>
-                <li>A 50% deposit (20,000 EGP) secures your seat.</li>
-                <li>The remaining balance (20,000 EGP) is due at Session 1.</li>
+                <li>The program fee is $900 USD; the current early-bird price is $800 USD, payable by bank transfer or InstaPay after acceptance.</li>
+                <li>A 50% deposit ($400) secures your seat.</li>
+                <li>The remaining balance ($400) is due at Session 1.</li>
               </ul>
             </section>
 

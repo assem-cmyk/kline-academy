@@ -45,7 +45,7 @@ const STORAGE_KEY = 'kline-academy-form'
 const STEPS = ['Personal Info', 'Batch & Software', 'Clinical Background', 'Review & Submit']
 
 const BATCHES = [
-  'In-Person — Batch 2 (Cairo) · Sep 18 – Oct 10, 2026 · Fri & Sat · 4 weekends',
+  'In-Person — Batch 2 (Cairo) · Oct 2 – 24, 2026 · Fri & Sat · 4 weekends',
 ]
 
 const CHALLENGES = [
@@ -650,7 +650,7 @@ export default function RegistrationForm() {
               {...fieldAria('investmentConfirmed')}
             />
             <span className="text-sm text-gray-700">
-              I confirm I am ready for the 40,000 EGP investment. I understand payment is made via bank transfer or InstaPay after acceptance. A 50% deposit (20,000 EGP) secures my seat, with the remaining balance due at Session 1. I agree to the{' '}
+              I confirm I am ready for the $800 USD investment. I understand payment is made via bank transfer or InstaPay after acceptance. A 50% deposit ($400) secures my seat, with the remaining balance due at Session 1. I agree to the{' '}
               <a href="/terms" target="_blank" className="underline text-navy hover:text-teal-dark">Terms &amp; Refund Policy</a>{' '}
               (full refund up to 10 days before the first session; after that, fees are non-refundable) and to the processing of my data as described in the{' '}
               <a href="/privacy" target="_blank" className="underline text-navy hover:text-teal-dark">Privacy Policy</a>.

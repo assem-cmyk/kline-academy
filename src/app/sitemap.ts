@@ -3,7 +3,7 @@ import type { MetadataRoute } from 'next'
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://klineacademy.org'
 
 // Bump when page content meaningfully changes — a real freshness signal beats build time
-const LAST_CONTENT_UPDATE = new Date('2026-07-20')
+const LAST_CONTENT_UPDATE = new Date('2026-07-21')
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [

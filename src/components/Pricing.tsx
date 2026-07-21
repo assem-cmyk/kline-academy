@@ -41,15 +41,15 @@ export default function Pricing() {
             </p>
             <div className="flex items-baseline justify-center gap-4 mb-2">
               <span className="text-2xl md:text-3xl font-semibold text-slate-500 line-through decoration-2">
-                50,000
+                $900
               </span>
               <p className="text-6xl md:text-7xl font-bold text-white tracking-tight">
-                40,000
-                <span className="text-xl font-normal text-slate-400 ml-2">EGP</span>
+                $800
+                <span className="text-xl font-normal text-slate-400 ml-2">USD</span>
               </p>
             </div>
             <span className="inline-block bg-teal/15 text-teal-light text-[11px] font-semibold uppercase tracking-wider px-3 py-1.5 rounded-full border border-teal/30 mb-3">
-              Early Bird Discount · Save 10,000 EGP
+              Early Bird Discount · Save $100
             </span>
             <p className="text-slate-400 text-sm mb-10">
               4 weekends · 48 hours · 15 cases
@@ -78,7 +78,7 @@ export default function Pricing() {
                 Payment via bank transfer or InstaPay after acceptance.
               </p>
               <p className="text-slate-400 text-sm">
-                A 50% deposit (20,000 EGP) secures your seat — the remaining balance is due at Session 1.
+                A 50% deposit ($400) secures your seat — the remaining balance is due at Session 1.
               </p>
               <div className="inline-flex items-center gap-2 mt-4 px-4 py-2 rounded-full bg-teal/10 border border-teal/20">
                 <svg aria-hidden="true" className="w-3.5 h-3.5 text-teal" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
