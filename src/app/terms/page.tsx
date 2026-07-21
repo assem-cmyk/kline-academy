@@ -43,7 +43,7 @@ export default function TermsPage() {
             <section>
               <h2 className="text-xl font-bold text-navy mb-3">Payment</h2>
               <ul className="list-disc pl-6 space-y-1">
-                <li>The program fee is $900 USD; the current early-bird price is $800 USD, payable by bank transfer or InstaPay after acceptance.</li>
+                <li>The base program fee is $1,000 USD. The standard discounted price is $900 USD, and the current early-bird price is $800 USD, payable by bank transfer or InstaPay after acceptance.</li>
                 <li>A 50% deposit ($400) secures your seat.</li>
                 <li>The remaining balance ($400) is due at Session 1.</li>
               </ul>

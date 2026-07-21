@@ -41,7 +41,7 @@ export default function Pricing() {
             </p>
             <div className="flex items-baseline justify-center gap-4 mb-2">
               <span className="text-2xl md:text-3xl font-semibold text-slate-500 line-through decoration-2">
-                $900
+                $1,000
               </span>
               <p className="text-6xl md:text-7xl font-bold text-white tracking-tight">
                 $800
@@ -49,8 +49,11 @@ export default function Pricing() {
               </p>
             </div>
             <span className="inline-block bg-teal/15 text-teal-light text-[11px] font-semibold uppercase tracking-wider px-3 py-1.5 rounded-full border border-teal/30 mb-3">
-              Early Bird Discount · Save $100
+              Early Bird Discount · Save $200
             </span>
+            <p className="text-slate-400 text-sm mb-2">
+              Standard price: <span className="text-slate-300 font-semibold">$900</span> · Early-bird price: <span className="text-teal-light font-semibold">$800</span>
+            </p>
             <p className="text-slate-400 text-sm mb-10">
               4 weekends · 48 hours · 15 cases
             </p>
