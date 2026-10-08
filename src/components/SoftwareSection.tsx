@@ -1,13 +1,19 @@
+import Image from 'next/image'
+
 const software = [
   {
     name: 'OnyxCeph',
     logo: '/software/onyxceph-logo.png',
+    width: 520,
+    height: 105,
     tagline: 'Established orthodontic planning software',
     features: ['Beginner-friendly workflow', 'Module-based 3D setup & staging'],
   },
   {
     name: 'Titan',
     logo: '/software/titan-logo.png',
+    width: 889,
+    height: 253,
     tagline: 'Precision aligner design & staging',
     features: ['Advanced staging & mechanics control', 'Pro-grade precision'],
   },
@@ -34,12 +40,13 @@ export default function SoftwareSection() {
             >
               {/* Logo container */}
               <div className="h-24 flex items-center justify-center mb-6 bg-gradient-to-br from-slate-50 to-white rounded-xl border border-navy-700/5 relative overflow-hidden">
-                <img
+                <Image
                   src={sw.logo}
                   alt={`${sw.name} logo`}
-                  loading="lazy"
-                  decoding="async"
-                  className="max-h-14 max-w-[260px] object-contain relative z-10 transition-transform group-hover:scale-105"
+                  width={sw.width}
+                  height={sw.height}
+                  sizes="260px"
+                  className="w-auto h-auto max-h-14 max-w-[260px] object-contain relative z-10 transition-transform group-hover:scale-105"
                 />
               </div>
 

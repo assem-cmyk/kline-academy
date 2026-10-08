@@ -1,3 +1,5 @@
+import Image from 'next/image'
+
 const highlights = [
   {
     title: 'Aligner Market Landscape',
@@ -29,12 +31,12 @@ export default function BusinessModule() {
             <div className="relative max-w-[360px] mx-auto lg:mx-0">
               <div className="absolute -inset-3 rounded-3xl bg-gradient-to-br from-teal/30 via-teal/10 to-transparent blur-2xl" />
               <div className="relative aspect-[4/5] rounded-3xl overflow-hidden ring-1 ring-white/10 shadow-premium-lg">
-                <img
+                <Image
                   src="/faculty/assem-k.jpg"
                   alt="Dr. Assem Youssef, CEO of K Line Middle East"
-                  loading="lazy"
-                  decoding="async"
-                  className="w-full h-full object-cover"
+                  fill
+                  sizes="(min-width: 1024px) 360px, 90vw"
+                  className="object-cover"
                   style={{ objectPosition: '50% top' }}
                 />
               </div>

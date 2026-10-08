@@ -1,3 +1,5 @@
+import Image from 'next/image'
+
 const faculty = [
   {
     name: 'Dr. Sameh Talaat',
@@ -66,12 +68,12 @@ function FacultyPhoto({
         <div aria-hidden="true" className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-teal/15 to-navy/5 text-navy text-3xl font-bold">
           {initials}
         </div>
-        <img
+        <Image
           src={photo}
           alt={name}
-          loading="lazy"
-          decoding="async"
-          className="absolute inset-0 w-full h-full object-cover object-top"
+          fill
+          sizes="180px"
+          className="object-cover object-top"
         />
       </div>
     </div>
