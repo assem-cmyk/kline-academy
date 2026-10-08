@@ -1,7 +1,7 @@
 const details = [
   '8 Sessions — Fridays & Saturdays over 4 consecutive weekends',
   'Fridays 3:00–8:30 PM · Saturdays 9:30 AM–4:30 PM',
-  'Starting Friday, October 2, 2026',
+  'Batch 3: dates to be announced — same weekend format',
   'Held in person in Cairo, Egypt',
   '15 participants max per batch',
   '15 de-identified real cases per participant',
@@ -54,7 +54,7 @@ export default function ProgramOverview() {
             <div className="absolute -top-32 -right-32 w-64 h-64 rounded-full bg-teal/10 blur-3xl pointer-events-none" />
             <h3 className="relative text-lg font-bold text-white mb-7 flex items-center gap-2">
               <span className="w-1 h-6 rounded-full bg-teal" />
-              8-Session Schedule
+              8-Session Schedule · Batch 2 (in session)
             </h3>
             <div className="relative space-y-0">
               {sessions.map((s, i) => (

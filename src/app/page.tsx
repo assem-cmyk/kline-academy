@@ -15,7 +15,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://klineacademy.org'
 const courseJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Course',
-  name: 'Digital Aligner Planning Bootcamp — Batch 2',
+  name: 'Digital Aligner Planning Bootcamp — Batch 3',
   description:
     "Egypt's first case-based bootcamp for digital aligner planning using OnyxCeph & Titan, taught by K Line Europe specialists. 8 sessions over 4 weekends, 15 real cases per participant.",
   provider: {
@@ -26,44 +26,18 @@ const courseJsonLd = {
   image: `${SITE_URL}/opengraph-image`,
   offers: {
     '@type': 'Offer',
-    price: '800',
+    price: '900',
     priceCurrency: 'USD',
-    availability: 'https://schema.org/LimitedAvailability',
+    availability: 'https://schema.org/PreOrder',
     url: `${SITE_URL}/apply`,
-    validFrom: '2026-07-20',
-    validThrough: '2026-10-02',
+    validFrom: '2026-10-08',
     category: 'Paid',
   },
   courseWorkload: 'PT50H',
   hasCourseInstance: {
     '@type': 'CourseInstance',
     courseMode: 'Onsite',
-    startDate: '2026-10-02',
-    endDate: '2026-10-24',
     courseWorkload: 'PT50H',
-
-    courseSchedule: [
-      {
-        '@type': 'Schedule',
-        repeatFrequency: 'Weekly',
-        repeatCount: 4,
-        byDay: 'https://schema.org/Friday',
-        startTime: '15:00',
-        endTime: '20:30',
-        startDate: '2026-10-02',
-        endDate: '2026-10-23',
-      },
-      {
-        '@type': 'Schedule',
-        repeatFrequency: 'Weekly',
-        repeatCount: 4,
-        byDay: 'https://schema.org/Saturday',
-        startTime: '09:30',
-        endTime: '16:30',
-        startDate: '2026-10-03',
-        endDate: '2026-10-24',
-      },
-    ],
     instructor: [
       { '@type': 'Person', name: 'Dr. Sameh Talaat' },
       { '@type': 'Person', name: 'Dr. Yasmine El Kabani' },

@@ -6,10 +6,10 @@ const FROM = 'K Line Academy <noreply@klineacademy.org>'
 
 /* ── Server-side allowlists (must mirror the form) ── */
 const BATCHES = [
-  'In-Person — Batch 2 (Cairo) · Oct 2 – 24, 2026 · Fri & Sat · 4 weekends',
+  'In-Person — Batch 3 (Cairo) · Dates to be announced · Fri & Sat · 4 weekends',
 ]
 // Human-readable batch name for applicant-facing copy (never show the raw data string)
-const BATCH_FRIENDLY = 'Batch 2 in Cairo (October 2 – 24, 2026)'
+const BATCH_FRIENDLY = 'Batch 3 in Cairo (dates to be announced)'
 const SOFTWARE = ['OnyxCeph', 'Titan', 'No preference']
 const WORKFLOWS = ['In-house planning', 'Outsource to lab', 'Mixed']
 const CHALLENGES = [
@@ -254,8 +254,8 @@ function applicantEmailHtml(d: FormPayload): string {
         <ol style="font-size:14px;color:#333;line-height:2;padding-left:20px;margin:0 0 24px">
           <li>We review every application within 48 hours</li>
           <li>We'll contact you with a decision via WhatsApp or email</li>
-          <li>If accepted, a 50% deposit ($400 USD) secures your seat</li>
-          <li>The remaining balance ($400) is due at Session 1</li>
+          <li>If accepted, a 50% deposit ($450 USD) secures your seat</li>
+          <li>The remaining balance ($450) is due at Session 1</li>
         </ol>
         <p style="font-size:13px;color:#666;line-height:1.6;margin:0 0 16px;padding:12px 16px;background:#e9f8f8;border-left:3px solid ${TEAL};border-radius:4px">
           <strong style="color:${NAVY}">Refund Policy:</strong> Full refund available up to 10 days before the first session. After that, fees are non-refundable.
@@ -309,8 +309,8 @@ function applicantEmailText(d: FormPayload): string {
     "Here's what happens next:",
     '1. We review every application within 48 hours',
     "2. We'll contact you with a decision via WhatsApp or email",
-    '3. If accepted, a 50% deposit ($400 USD) secures your seat',
-    '4. The remaining balance ($400) is due at Session 1',
+    '3. If accepted, a 50% deposit ($450 USD) secures your seat',
+    '4. The remaining balance ($450) is due at Session 1',
     '',
     'Refund policy: full refund available up to 10 days before the first session; after that, fees are non-refundable. Full terms: https://klineacademy.org/terms',
     '',

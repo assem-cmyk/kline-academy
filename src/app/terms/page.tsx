@@ -27,14 +27,14 @@ export default function TermsPage() {
       <main id="main" className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 min-h-screen bg-white">
         <div className="max-w-3xl mx-auto">
           <h1 className="text-3xl md:text-4xl font-bold text-navy mb-2">Terms &amp; Refund Policy</h1>
-          <p className="text-navy/60 text-sm mb-10">Last updated: July 20, 2026</p>
+          <p className="text-navy/60 text-sm mb-10">Last updated: October 8, 2026</p>
 
           <div className="space-y-8 text-[15px] leading-relaxed text-navy/80">
             <section>
               <h2 className="text-xl font-bold text-navy mb-3">The program</h2>
               <p>
-                K Line Academy Batch 2 is an in-person training program held in Cairo, Egypt: 8 sessions
-                over 4 consecutive weekends (October 2 – 24, 2026), Fridays 3:00–8:30 PM and
+                K Line Academy is an in-person training program held in Cairo, Egypt: 8 sessions
+                over 4 consecutive weekends (Batch 3 dates to be announced and confirmed before any payment), Fridays 3:00–8:30 PM and
                 Saturdays 9:30 AM–4:30 PM. Seats are limited to 15 participants. Every application is
                 reviewed; a seat is confirmed on acceptance and receipt of the deposit.
               </p>
@@ -43,9 +43,9 @@ export default function TermsPage() {
             <section>
               <h2 className="text-xl font-bold text-navy mb-3">Payment</h2>
               <ul className="list-disc pl-6 space-y-1">
-                <li>The base program fee is $1,000 USD. The standard discounted price is $900 USD, and the current early-bird price is $800 USD, payable by bank transfer or InstaPay after acceptance.</li>
-                <li>A 50% deposit ($400) secures your seat.</li>
-                <li>The remaining balance ($400) is due at Session 1.</li>
+                <li>The base program fee is $1,000 USD. The current discounted price is $900 USD, payable by bank transfer or InstaPay after acceptance.</li>
+                <li>A 50% deposit ($450) secures your seat.</li>
+                <li>The remaining balance ($450) is due at Session 1.</li>
               </ul>
             </section>
 

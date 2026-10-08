@@ -9,7 +9,7 @@ export const faqs = [
   },
   {
     q: 'When do I pay, and how?',
-    a: 'Only after acceptance. A 50% deposit ($400 USD) secures your seat via bank transfer or InstaPay, and the remaining balance ($400) is due at Session 1.',
+    a: 'Only after acceptance. A 50% deposit ($450 USD) secures your seat via bank transfer or InstaPay, and the remaining balance ($450) is due at Session 1.',
   },
   {
     q: 'What is the refund policy?',

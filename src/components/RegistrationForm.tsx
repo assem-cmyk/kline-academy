@@ -45,7 +45,7 @@ const STORAGE_KEY = 'kline-academy-form'
 const STEPS = ['Personal Info', 'Batch & Software', 'Clinical Background', 'Review & Submit']
 
 const BATCHES = [
-  'In-Person — Batch 2 (Cairo) · Oct 2 – 24, 2026 · Fri & Sat · 4 weekends',
+  'In-Person — Batch 3 (Cairo) · Dates to be announced · Fri & Sat · 4 weekends',
 ]
 
 const CHALLENGES = [
@@ -128,7 +128,7 @@ export default function RegistrationForm() {
 
   // If there's only one batch, auto-select it so users don't have to "pick" the only option
   useEffect(() => {
-    if (BATCHES.length === 1 && !form.batch) {
+    if (BATCHES.length === 1 && !BATCHES.includes(form.batch)) {
       setForm((prev) => ({ ...prev, batch: BATCHES[0] }))
     }
   }, [form.batch])
@@ -386,7 +386,7 @@ export default function RegistrationForm() {
                 </span>
                 <div className="text-sm">
                   <p className="font-semibold text-navy">{BATCHES[0]}</p>
-                  <p className="text-gray-500 text-xs mt-1">Only Batch 2 is currently open. You will be enrolled in this batch on acceptance.</p>
+                  <p className="text-gray-500 text-xs mt-1">Batch 2 is in session. New applications join the Batch 3 priority list — we confirm the dates with you before any payment.</p>
                 </div>
               </div>
             </>
@@ -650,7 +650,7 @@ export default function RegistrationForm() {
               {...fieldAria('investmentConfirmed')}
             />
             <span className="text-sm text-gray-700">
-              I confirm I am ready for the $800 USD investment. I understand payment is made via bank transfer or InstaPay after acceptance. A 50% deposit ($400) secures my seat, with the remaining balance due at Session 1. I agree to the{' '}
+              I confirm I am ready for the $900 USD investment. I understand payment is made via bank transfer or InstaPay after acceptance. A 50% deposit ($450) secures my seat, with the remaining balance due at Session 1. I agree to the{' '}
               <a href="/terms" target="_blank" className="underline text-navy hover:text-teal-dark">Terms &amp; Refund Policy</a>{' '}
               (full refund up to 10 days before the first session; after that, fees are non-refundable) and to the processing of my data as described in the{' '}
               <a href="/privacy" target="_blank" className="underline text-navy hover:text-teal-dark">Privacy Policy</a>.
